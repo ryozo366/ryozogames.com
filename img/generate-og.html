@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html><head><title>OG Image Generator</title></head>
+<body style="background:#111;color:#fff;font-family:sans-serif;padding:20px;">
+<h1>OG Image Generator - Klicke auf die Bilder zum Download</h1>
+<div id="images" style="display:flex;flex-wrap:wrap;gap:20px;"></div>
+<script>
+const configs = [
+  { name: 'og-home', title: 'RyozoGames', subtitle: 'Kostenlose Browser-Spiele Online', bg1: '#0a001a', bg2: '#1a0033', accent: '#00f0ff' },
+  { name: 'og-ryozodash', title: 'RyozoDash', subtitle: 'Geometry Dash im Browser', bg1: '#0a001a', bg2: '#1a0033', accent: '#ff00ff', icon: '▲' },
+  { name: 'og-snake3d', title: 'Snake 3D', subtitle: '3D Snake Game im Browser', bg1: '#1a3a5c', bg2: '#87CEEB', accent: '#f9ca24', icon: '🐍' },
+];
+
+configs.forEach(cfg => {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1200; canvas.height = 630;
+  const ctx = canvas.getContext('2d');
+
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, 1200, 630);
+  grad.addColorStop(0, cfg.bg1);
+  grad.addColorStop(1, cfg.bg2);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1200, 630);
+
+  // Decorative circles
+  ctx.globalAlpha = 0.1;
+  ctx.fillStyle = cfg.accent;
+  ctx.beginPath(); ctx.arc(900, 200, 300, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(200, 500, 200, 0, Math.PI * 2); ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // Grid lines
+  ctx.strokeStyle = cfg.accent;
+  ctx.globalAlpha = 0.08;
+  ctx.lineWidth = 1;
+  for (let x = 0; x < 1200; x += 60) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 630); ctx.stroke(); }
+  for (let y = 0; y < 630; y += 60) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1200, y); ctx.stroke(); }
+  ctx.globalAlpha = 1;
+
+  // Icon
+  if (cfg.icon) {
+    ctx.font = '120px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(cfg.icon, 600, 220);
+  }
+
+  // Title
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 72px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(cfg.title, 600, cfg.icon ? 340 : 280);
+
+  // Subtitle
+  ctx.fillStyle = cfg.accent;
+  ctx.font = '36px sans-serif';
+  ctx.fillText(cfg.subtitle, 600, cfg.icon ? 400 : 340);
+
+  // Bottom bar
+  ctx.fillStyle = cfg.accent;
+  ctx.fillRect(0, 610, 1200, 20);
+
+  // Brand
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '24px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('ryozogames.com', 1170, 590);
+
+  // Make clickable
+  canvas.style.cursor = 'pointer';
+  canvas.style.width = '400px';
+  canvas.style.borderRadius = '8px';
+  canvas.title = 'Klick zum Download: ' + cfg.name + '.png';
+  canvas.addEventListener('click', () => {
+    const a = document.createElement('a');
+    a.download = cfg.name + '.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  });
+
+  const wrap = document.createElement('div');
+  wrap.innerHTML = '<p style="margin-bottom:8px;"><b>' + cfg.name + '.png</b> (1200x630)</p>';
+  wrap.appendChild(canvas);
+  document.getElementById('images').appendChild(wrap);
+});
+</script>
+</body></html>

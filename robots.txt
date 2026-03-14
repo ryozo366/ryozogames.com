@@ -1,3 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /img/generate-og.html
+
 Sitemap: https://ryozogames.com/sitemap.xml
+
+# Crawl-delay for polite crawling
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: Googlebot
+Allow: /
