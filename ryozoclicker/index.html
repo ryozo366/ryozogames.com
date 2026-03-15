@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>RyozoClicker – Idle Clicker Game im Browser | RyozoGames</title>
+  <meta name="description" content="Spiele RyozoClicker kostenlos im Browser – ein Neon Idle Clicker Game mit Gebäuden, Upgrades, Achievements und Prestige-System. Klicke dich zum Milliardär!">
+  <meta name="author" content="Mika Gandras">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ryozogames.com/ryozoclicker/">
+
+  <meta property="og:type" content="game">
+  <meta property="og:title" content="RyozoClicker – Idle Clicker Game im Browser">
+  <meta property="og:description" content="Kostenloses Idle Clicker Game mit Neon-Ästhetik. Klicke Coins, kaufe Gebäude, schalte Upgrades frei!">
+  <meta property="og:url" content="https://ryozogames.com/ryozoclicker/">
+  <meta property="og:image" content="https://ryozogames.com/img/og-ryozoclicker.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="RyozoGames">
+  <meta property="og:locale" content="de_DE">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RyozoClicker – Idle Clicker Game im Browser">
+  <meta name="twitter:description" content="Kostenloses Idle Clicker Game mit Neon-Ästhetik direkt im Browser spielen.">
+  <meta name="twitter:image" content="https://ryozogames.com/img/og-ryozoclicker.png">
+
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+  <meta name="theme-color" content="#0a001a">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "RyozoClicker",
+    "description": "Ein Neon Idle Clicker Game mit Gebäuden, Upgrades, Achievements und Prestige-System. Klicke Coins, kaufe Generatoren und werde zum Milliardär.",
+    "url": "https://ryozogames.com/ryozoclicker/",
+    "genre": ["Idle Game", "Clicker"],
+    "gamePlatform": "Web Browser",
+    "operatingSystem": "Any",
+    "applicationCategory": "Game",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Mika Gandras"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* ===== RYOZOCLICKER STYLES ===== */
+    .clicker-game {
+      display: flex;
+      min-height: calc(100vh - var(--nav-height));
+      background: linear-gradient(180deg, #0d0020 0%, #0a0a0a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Grid background */
+    .clicker-game::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(136, 0, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(136, 0, 255, 0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    /* === LEFT PANEL (Coin area) === */
+    .clicker-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      min-height: 400px;
+    }
+
+    /* Stats bar */
+    .clicker-stats {
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .coin-display {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      background: linear-gradient(135deg, #FFD700, #FFA500, #FFD700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .cps-display {
+      font-size: clamp(14px, 2vw, 18px);
+      color: var(--accent-cyan);
+      margin-top: 4px;
+    }
+
+    .cpc-display {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .prestige-display {
+      font-size: 13px;
+      color: var(--accent-magenta);
+      margin-top: 4px;
+      min-height: 18px;
+    }
+
+    /* Coin button */
+    #clickArea {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 10px 0 20px;
+      z-index: 1;
+    }
+
+    #coinBtn {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 4px solid #FFD700;
+      background: radial-gradient(circle at 35% 35%, #FFE066, #FFD700 40%, #CC8800 80%, #996600);
+      cursor: pointer;
+      font-size: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.08s;
+      box-shadow:
+        0 0 30px rgba(255, 215, 0, 0.3),
+        0 0 60px rgba(255, 215, 0, 0.15),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.3);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+
+    #coinBtn::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 215, 0, 0.2);
+      animation: coinPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes coinPulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.08); opacity: 1; }
+    }
+
+    #coinBtn:hover {
+      transform: scale(1.05);
+      box-shadow:
+        0 0 40px rgba(255, 215, 0, 0.5),
+        0 0 80px rgba(255, 215, 0, 0.25),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    #coinBtn:active, #coinBtn.clicked {
+      transform: scale(0.92);
+    }
+
+    /* Click particles */
+    .click-particle {
+      position: absolute;
+      font-size: 18px;
+      font-weight: 800;
+      color: #FFD700;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+      pointer-events: none;
+      animation: particleFly 1s ease-out forwards;
+      z-index: 10;
+    }
+
+    @keyframes particleFly {
+      0% { opacity: 1; transform: translateY(0) translateX(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-80px) translateX(var(--dx, 0px)) scale(0.6); }
+    }
+
+    /* Achievement popup */
+    .achievement-popup {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: rgba(26, 0, 51, 0.95);
+      border: 1px solid var(--accent-magenta);
+      border-radius: 12px;
+      padding: 12px 24px;
+      color: white;
+      font-size: 14px;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+      white-space: nowrap;
+    }
+
+    .achievement-popup.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Achievements bar */
+    .clicker-achievements {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      max-width: 300px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ach-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: default;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .ach-badge.unlocked {
+      border-color: var(--accent-magenta);
+      box-shadow: 0 0 8px rgba(255, 0, 255, 0.2);
+    }
+
+    .ach-badge:hover {
+      transform: scale(1.15);
+    }
+
+    /* Prestige button */
+    #prestigeBtn {
+      display: none;
+      margin-top: 16px;
+      padding: 10px 24px;
+      border-radius: 25px;
+      border: 2px solid var(--accent-magenta);
+      background: rgba(255, 0, 255, 0.1);
+      color: var(--accent-magenta);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 1;
+    }
+
+    #prestigeBtn:hover {
+      background: rgba(255, 0, 255, 0.2);
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+    }
+
+    /* === RIGHT PANEL (Shop) === */
+    .clicker-right {
+      width: 380px;
+      background: rgba(10, 0, 20, 0.8);
+      border-left: 1px solid var(--border-glow);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Tabs */
+    .shop-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-glow);
+      flex-shrink: 0;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-secondary);
+      background: rgba(136, 0, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-cyan);
+      border-bottom: 2px solid var(--accent-cyan);
+      background: rgba(0, 240, 255, 0.05);
+    }
+
+    /* Shop panels */
+    .shop-panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+    }
+
+    .shop-panel::-webkit-scrollbar { width: 6px; }
+    .shop-panel::-webkit-scrollbar-track { background: transparent; }
+    .shop-panel::-webkit-scrollbar-thumb { background: rgba(136, 0, 255, 0.3); border-radius: 3px; }
+
+    /* Shop items */
+    .shop-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.02);
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: left;
+      color: white;
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    .shop-item:hover:not(.locked) {
+      background: rgba(0, 240, 255, 0.06);
+      border-color: rgba(0, 240, 255, 0.2);
+    }
+
+    .shop-item.locked {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    .shop-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .shop-icon {
+      font-size: 24px;
+      width: 36px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .shop-name {
+      font-weight: 700;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .shop-count {
+      color: var(--accent-cyan);
+      font-size: 12px;
+      margin-left: 4px;
+    }
+
+    .shop-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .shop-price {
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      padding-left: 8px;
+    }
+
+    .shop-price.affordable {
+      color: #FFD700;
+      text-shadow: 0 0 6px rgba(255, 215, 0, 0.4);
+    }
+
+    .upgrade-item .shop-icon {
+      color: var(--accent-green);
+    }
+
+    .shop-empty {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 30px;
+      font-size: 14px;
+    }
+
+    /* Save buttons */
+    .save-bar {
+      display: flex;
+      gap: 6px;
+      padding: 10px 8px;
+      border-top: 1px solid var(--border-glow);
+      flex-shrink: 0;
+    }
+
+    .save-bar button {
+      flex: 1;
+      padding: 8px 4px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .save-bar button:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+    }
+
+    /* === MOBILE LAYOUT === */
+    @media (max-width: 768px) {
+      .clicker-game {
+        flex-direction: column;
+        min-height: auto;
+      }
+
+      .clicker-left {
+        min-height: 340px;
+        padding: 16px;
+      }
+
+      #clickArea {
+        width: 160px;
+        height: 160px;
+        margin: 8px 0 16px;
+      }
+
+      #coinBtn {
+        width: 160px;
+        height: 160px;
+        font-size: 52px;
+      }
+
+      .clicker-right {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid var(--border-glow);
+        max-height: 50vh;
+      }
+
+      .shop-panel {
+        max-height: 40vh;
+      }
+    }
+
+    @media (max-width: 400px) {
+      #clickArea { width: 140px; height: 140px; }
+      #coinBtn { width: 140px; height: 140px; font-size: 44px; }
+      .coin-display { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <nav class="nav-container" aria-label="Hauptnavigation">
+      <a href="/" class="nav-logo">RyozoGames</a>
+      <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/ryozoclicker/" class="active">Spiele</a></li>
+        <li><a href="/about/">Über uns</a></li>
+        <li><a href="/impressum/">Impressum</a></li>
+        <li><a href="/datenschutz/">Datenschutz</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- GAME -->
+    <div class="clicker-game">
+      <!-- LEFT: Coin + Stats -->
+      <div class="clicker-left">
+        <div class="clicker-stats">
+          <div class="coin-display" id="coinCount">0</div>
+          <div class="cps-display" id="cpsCount">0/Sek</div>
+          <div class="cpc-display" id="cpcCount">1/Klick</div>
+          <div class="prestige-display" id="prestigeInfo"></div>
+        </div>
+
+        <div id="clickArea">
+          <div id="coinBtn">&#x1FA99;</div>
+        </div>
+
+        <div class="clicker-achievements" id="achievementList"></div>
+
+        <button id="prestigeBtn"></button>
+      </div>
+
+      <!-- RIGHT: Shop -->
+      <div class="clicker-right">
+        <div class="shop-tabs">
+          <button class="tab-btn active" data-tab="buildings">Gebäude</button>
+          <button class="tab-btn" data-tab="upgrades">Upgrades</button>
+        </div>
+
+        <div class="shop-panel" id="buildingPanel">
+          <div id="buildingList"></div>
+        </div>
+
+        <div class="shop-panel" id="upgradePanel" style="display:none;">
+          <div id="upgradeList"></div>
+        </div>
+
+        <div class="save-bar">
+          <button id="saveBtn">Speichern</button>
+          <button id="exportBtn">Export</button>
+          <button id="importBtn">Import</button>
+          <button id="resetBtn">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO CONTENT -->
+    <article class="game-content">
+      <h2>Über RyozoClicker</h2>
+      <p>RyozoClicker ist ein kostenloses Idle Clicker Game, das du direkt in deinem Browser spielen kannst. Inspiriert von Klassikern wie Cookie Clicker, verbindet RyozoClicker süchtig machendes Klick-Gameplay mit einer einzigartigen Neon-Ästhetik. Kein Download, keine Anmeldung – einfach klicken und loslegen!</p>
+      <p>Dein Ziel: So viele Coins wie möglich sammeln! Klicke auf den großen Neon-Coin in der Mitte, um Coins zu verdienen. Mit deinen Coins kaufst du Gebäude, die automatisch Coins für dich generieren – auch wenn du nicht klickst. Je mehr Gebäude und Upgrades du hast, desto schneller wächst dein Vermögen.</p>
+
+      <h2>Spielmechaniken</h2>
+      <table class="controls-table">
+        <thead>
+          <tr><th>Mechanik</th><th>Beschreibung</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Klicken</strong></td><td>Klicke auf den Coin, um Coins zu verdienen. Upgrades erhöhen deinen Ertrag pro Klick.</td></tr>
+          <tr><td><strong>Gebäude</strong></td><td>7 verschiedene Gebäude von Cursor bis Dimensions-Tor. Jedes Gebäude generiert automatisch Coins pro Sekunde (CPS).</td></tr>
+          <tr><td><strong>Upgrades</strong></td><td>Einmalige Verbesserungen, die deine Klick-Power oder die Effizienz deiner Gebäude erhöhen.</td></tr>
+          <tr><td><strong>Prestige</strong></td><td>Ab 1 Million Coins kannst du einen Prestige-Reset machen: Alles zurücksetzen, dafür einen permanenten Multiplikator erhalten.</td></tr>
+          <tr><td><strong>Achievements</strong></td><td>15 Erfolge zum Freischalten – vom ersten Klick bis zum Milliardär.</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Gebäude</h2>
+      <table class="diff-table">
+        <thead>
+          <tr><th>Gebäude</th><th>Basis-CPS</th><th>Startpreis</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Cursor</td><td>0,1</td><td>15</td></tr>
+          <tr><td>Server</td><td>1</td><td>100</td></tr>
+          <tr><td>GPU Farm</td><td>8</td><td>1.100</td></tr>
+          <tr><td>Bot-Netzwerk</td><td>47</td><td>12.000</td></tr>
+          <tr><td>KI-Modul</td><td>260</td><td>130.000</td></tr>
+          <tr><td>Quantenrechner</td><td>1.400</td><td>1.400.000</td></tr>
+          <tr><td>Dimensions-Tor</td><td>7.800</td><td>20.000.000</td></tr>
+        </tbody>
+      </table>
+      <p>Der Preis jedes Gebäudes steigt mit jedem Kauf um 15%. Plane deine Investitionen also klug!</p>
+
+      <h2>Tipps & Tricks</h2>
+      <p><strong>Klicke am Anfang aktiv:</strong> In den ersten Minuten ist Klicken deine Haupteinnahmequelle. Spare für den ersten Cursor, um passives Einkommen zu starten.</p>
+      <p><strong>Investiere in Gebäude:</strong> Gebäude generieren auch Coins, wenn du nicht aktiv klickst. Je mehr du hast, desto schneller wächst dein Vermögen.</p>
+      <p><strong>Upgrades nicht vergessen:</strong> Gebäude-Upgrades verdoppeln die CPS eines Gebäudetyps. Das lohnt sich besonders bei Gebäuden, von denen du viele hast.</p>
+      <p><strong>Prestige nutzen:</strong> Wenn dein Fortschritt stagniert, mache einen Prestige-Reset. Der permanente Multiplikator beschleunigt deinen nächsten Durchlauf enorm.</p>
+      <p><strong>Dein Fortschritt wird gespeichert:</strong> RyozoClicker speichert automatisch alle 30 Sekunden. Dein Fortschritt bleibt also erhalten, auch wenn du den Browser schließt. Du verdienst sogar offline weiter (bis zu 24 Stunden)!</p>
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <nav class="footer-links" aria-label="Footer-Navigation">
+      <a href="/">Home</a>
+      <a href="/ryozodash/">RyozoDash</a>
+      <a href="/snake3d/">Snake 3D</a>
+      <a href="/ryozoclicker/">RyozoClicker</a>
+      <a href="/about/">Über uns</a>
+      <a href="/impressum/">Impressum</a>
+      <a href="/datenschutz/">Datenschutz</a>
+    </nav>
+    <p class="footer-copy">&copy; 2026 RyozoGames – Mika Gandras. Alle Rechte vorbehalten.</p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
