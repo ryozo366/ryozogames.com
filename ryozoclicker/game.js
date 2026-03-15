@@ -2,55 +2,81 @@
 (function() {
 'use strict';
 
-// ===== BUILDINGS =====
+// ===== BUILDINGS (12) =====
 const BUILDING_DATA = [
-  { id: 'cursor',    name: 'Cursor',           icon: '\u{1F5B1}\uFE0F', baseCps: 0.1,   basePrice: 15,         desc: 'Auto-Clicker' },
-  { id: 'server',    name: 'Server',           icon: '\u{1F5A5}\uFE0F', baseCps: 1,     basePrice: 100,        desc: 'Mining Server' },
-  { id: 'gpu',       name: 'GPU Farm',         icon: '\u26A1',          baseCps: 8,     basePrice: 1100,       desc: 'Graphics Card Farm' },
-  { id: 'botnet',    name: 'Bot Network',      icon: '\u{1F916}',       baseCps: 47,    basePrice: 12000,      desc: 'Automated Bots' },
-  { id: 'ai',        name: 'AI Module',        icon: '\u{1F9E0}',       baseCps: 260,   basePrice: 130000,     desc: 'Artificial Intelligence' },
-  { id: 'quantum',   name: 'Quantum Computer', icon: '\u269B\uFE0F',    baseCps: 1400,  basePrice: 1400000,    desc: 'Quantum Processor' },
-  { id: 'dimension', name: 'Dimension Gate',   icon: '\u{1F300}',       baseCps: 7800,  basePrice: 20000000,   desc: 'Interdimensional Portal' },
+  { id: 'cursor',     name: 'Cursor',           icon: '\u{1F5B1}\uFE0F', baseCps: 0.5,        basePrice: 10,              desc: 'Auto-Clicker' },
+  { id: 'server',     name: 'Server',           icon: '\u{1F5A5}\uFE0F', baseCps: 3,          basePrice: 75,              desc: 'Mining Server' },
+  { id: 'gpu',        name: 'GPU Farm',         icon: '\u26A1',          baseCps: 15,         basePrice: 800,             desc: 'Graphics Card Farm' },
+  { id: 'botnet',     name: 'Bot Network',      icon: '\u{1F916}',       baseCps: 80,         basePrice: 9000,            desc: 'Automated Bots' },
+  { id: 'ai',         name: 'AI Module',        icon: '\u{1F9E0}',       baseCps: 400,        basePrice: 100000,          desc: 'Artificial Intelligence' },
+  { id: 'quantum',    name: 'Quantum Computer', icon: '\u269B\uFE0F',    baseCps: 2500,       basePrice: 1100000,         desc: 'Quantum Processor' },
+  { id: 'dimension',  name: 'Dimension Gate',   icon: '\u{1F300}',       baseCps: 15000,      basePrice: 12000000,        desc: 'Interdimensional Portal' },
+  { id: 'timemachine',name: 'Time Machine',     icon: '\u231B',          baseCps: 90000,      basePrice: 130000000,       desc: 'Temporal Harvester' },
+  { id: 'dyson',      name: 'Dyson Sphere',     icon: '\u2600\uFE0F',    baseCps: 550000,     basePrice: 1400000000,      desc: 'Star-Powered Generator' },
+  { id: 'galaxy',     name: 'Galaxy Brain',     icon: '\u{1F30C}',       baseCps: 3500000,    basePrice: 15000000000,     desc: 'Galactic Neural Network' },
+  { id: 'reality',    name: 'Reality Engine',   icon: '\u{1F529}',       baseCps: 22000000,   basePrice: 170000000000,    desc: 'Fabric of Reality Manipulator' },
+  { id: 'multiverse', name: 'Multiverse Core',  icon: '\u{1F4A0}',       baseCps: 140000000,  basePrice: 2000000000000,   desc: 'Infinite Universe Generator' },
 ];
 
-// ===== UPGRADES =====
+// ===== UPGRADES (25) =====
 const UPGRADE_DATA = [
-  { id: 'click2',     name: 'Click Power x2',     price: 100,       desc: 'Double coins per click',        type: 'click', multiplier: 2 },
-  { id: 'click5',     name: 'Click Power x5',     price: 5000,      desc: '5x coins per click',            type: 'click', multiplier: 5 },
-  { id: 'click10',    name: 'Click Power x10',    price: 50000,     desc: '10x coins per click',           type: 'click', multiplier: 10 },
-  { id: 'cursor_2x',  name: 'Cursor Turbo',       price: 500,       desc: 'Cursor CPS x2',                type: 'building', building: 'cursor', multiplier: 2 },
-  { id: 'server_2x',  name: 'Server Boost',       price: 5000,      desc: 'Server CPS x2',                type: 'building', building: 'server', multiplier: 2 },
-  { id: 'gpu_2x',     name: 'GPU Overclock',      price: 50000,     desc: 'GPU Farm CPS x2',              type: 'building', building: 'gpu', multiplier: 2 },
-  { id: 'botnet_2x',  name: 'Bot Swarm',          price: 500000,    desc: 'Bot Network CPS x2',           type: 'building', building: 'botnet', multiplier: 2 },
-  { id: 'ai_2x',      name: 'Deep Learning',      price: 5000000,   desc: 'AI Module CPS x2',             type: 'building', building: 'ai', multiplier: 2 },
-  { id: 'quantum_2x', name: 'Qubit Boost',        price: 50000000,  desc: 'Quantum Computer CPS x2',      type: 'building', building: 'quantum', multiplier: 2 },
-  { id: 'dim_2x',     name: 'Multiverse',         price: 500000000, desc: 'Dimension Gate CPS x2',         type: 'building', building: 'dimension', multiplier: 2 },
-  { id: 'global_2x',  name: 'Neon Overdrive',     price: 10000000,  desc: 'All CPS x2',                   type: 'global', multiplier: 2 },
-  { id: 'global_5x',  name: 'Hyper Neon',         price: 1000000000,desc: 'All CPS x5',                   type: 'global', multiplier: 5 },
+  // Click power
+  { id: 'click2',      name: 'Click Power x2',     price: 100,            desc: 'Double coins per click',          type: 'click', multiplier: 2 },
+  { id: 'click5',      name: 'Click Power x5',     price: 5000,           desc: '5x coins per click',              type: 'click', multiplier: 5 },
+  { id: 'click10',     name: 'Click Power x10',    price: 50000,          desc: '10x coins per click',             type: 'click', multiplier: 10 },
+  { id: 'click25',     name: 'Click Power x25',    price: 5000000,        desc: '25x coins per click',             type: 'click', multiplier: 25 },
+  { id: 'click100',    name: 'Click Power x100',   price: 500000000,      desc: '100x coins per click',            type: 'click', multiplier: 100 },
+  // Building boosts
+  { id: 'cursor_2x',   name: 'Cursor Turbo',       price: 300,            desc: 'Cursor CPS x2',                  type: 'building', building: 'cursor', multiplier: 2 },
+  { id: 'server_2x',   name: 'Server Boost',       price: 3000,           desc: 'Server CPS x2',                  type: 'building', building: 'server', multiplier: 2 },
+  { id: 'gpu_2x',      name: 'GPU Overclock',      price: 30000,          desc: 'GPU Farm CPS x2',                type: 'building', building: 'gpu', multiplier: 2 },
+  { id: 'botnet_2x',   name: 'Bot Swarm',          price: 300000,         desc: 'Bot Network CPS x2',             type: 'building', building: 'botnet', multiplier: 2 },
+  { id: 'ai_2x',       name: 'Deep Learning',      price: 3000000,        desc: 'AI Module CPS x2',               type: 'building', building: 'ai', multiplier: 2 },
+  { id: 'quantum_2x',  name: 'Qubit Boost',        price: 30000000,       desc: 'Quantum Computer CPS x2',        type: 'building', building: 'quantum', multiplier: 2 },
+  { id: 'dim_2x',      name: 'Portal Amplifier',   price: 300000000,      desc: 'Dimension Gate CPS x2',          type: 'building', building: 'dimension', multiplier: 2 },
+  { id: 'time_2x',     name: 'Temporal Flux',      price: 3000000000,     desc: 'Time Machine CPS x2',            type: 'building', building: 'timemachine', multiplier: 2 },
+  { id: 'dyson_2x',    name: 'Solar Overdrive',    price: 30000000000,    desc: 'Dyson Sphere CPS x2',            type: 'building', building: 'dyson', multiplier: 2 },
+  { id: 'galaxy_2x',   name: 'Cosmic Expansion',   price: 300000000000,   desc: 'Galaxy Brain CPS x2',            type: 'building', building: 'galaxy', multiplier: 2 },
+  { id: 'reality_2x',  name: 'Reality Warp',       price: 3000000000000,  desc: 'Reality Engine CPS x2',          type: 'building', building: 'reality', multiplier: 2 },
+  { id: 'multi_2x',    name: 'Infinite Loop',      price: 30000000000000, desc: 'Multiverse Core CPS x2',         type: 'building', building: 'multiverse', multiplier: 2 },
+  // Global multipliers
+  { id: 'global_2x',   name: 'Neon Overdrive',     price: 10000000,       desc: 'All CPS x2',                     type: 'global', multiplier: 2 },
+  { id: 'global_5x',   name: 'Hyper Neon',         price: 1000000000,     desc: 'All CPS x5',                     type: 'global', multiplier: 5 },
+  { id: 'global_10x',  name: 'Ultra Neon',         price: 100000000000,   desc: 'All CPS x10',                    type: 'global', multiplier: 10 },
+  // Special
+  { id: 'golden',      name: 'Golden Touch',       price: 50000000,       desc: 'Clicks also give 1% of CPS',     type: 'golden' },
+  { id: 'golden5',     name: 'Diamond Touch',      price: 50000000000,    desc: 'Clicks give 5% of CPS',          type: 'golden5' },
 ];
 
-// ===== ACHIEVEMENTS =====
+// ===== ACHIEVEMENTS (22) =====
 const ACHIEVEMENT_DATA = [
-  { id: 'click1',      name: 'First Click',        desc: '1 coin clicked',              icon: '\u{1F446}', check: s => s.totalClicks >= 1 },
-  { id: 'click100',    name: 'Click Beginner',     desc: '100 clicks',                  icon: '\u270A',    check: s => s.totalClicks >= 100 },
-  { id: 'click1000',   name: 'Click Pro',          desc: '1,000 clicks',                icon: '\u{1F4AA}', check: s => s.totalClicks >= 1000 },
-  { id: 'click10000',  name: 'Click King',         desc: '10,000 clicks',               icon: '\u{1F451}', check: s => s.totalClicks >= 10000 },
-  { id: 'coins100',    name: 'Hundred',            desc: '100 coins earned',            icon: '\u{1FA99}', check: s => s.totalCoins >= 100 },
-  { id: 'coins1k',     name: 'Thousand',           desc: '1,000 coins earned',          icon: '\u{1F4B0}', check: s => s.totalCoins >= 1000 },
-  { id: 'coins100k',   name: 'Rich Gamer',         desc: '100,000 coins earned',        icon: '\u{1F48E}', check: s => s.totalCoins >= 100000 },
-  { id: 'coins1m',     name: 'Millionaire',        desc: '1 million coins earned',      icon: '\u{1F3C6}', check: s => s.totalCoins >= 1000000 },
-  { id: 'coins1b',     name: 'Billionaire',        desc: '1 billion coins earned',      icon: '\u{1F31F}', check: s => s.totalCoins >= 1000000000 },
-  { id: 'build1',      name: 'Automated',          desc: 'First building bought',       icon: '\u{1F3D7}\uFE0F', check: s => Object.values(s.buildings).some(b => b > 0) },
-  { id: 'build10',     name: 'Factory Owner',      desc: '10 buildings total',          icon: '\u{1F3ED}', check: s => Object.values(s.buildings).reduce((a,b) => a+b, 0) >= 10 },
-  { id: 'build50',     name: 'Empire',             desc: '50 buildings total',          icon: '\u{1F3F0}', check: s => Object.values(s.buildings).reduce((a,b) => a+b, 0) >= 50 },
-  { id: 'cps100',      name: 'Passive Power',      desc: '100 CPS reached',             icon: '\u26A1',    check: s => getCPS(s) >= 100 },
-  { id: 'cps10k',      name: 'Money Machine',      desc: '10,000 CPS reached',          icon: '\u{1F525}', check: s => getCPS(s) >= 10000 },
-  { id: 'prestige1',   name: 'Fresh Start',        desc: 'First prestige',              icon: '\u267B\uFE0F', check: s => s.totalPrestiges >= 1 },
+  { id: 'click1',       name: 'First Click',       desc: '1 coin clicked',              icon: '\u{1F446}', check: s => s.totalClicks >= 1 },
+  { id: 'click100',     name: 'Click Beginner',    desc: '100 clicks',                  icon: '\u270A',    check: s => s.totalClicks >= 100 },
+  { id: 'click1000',    name: 'Click Pro',         desc: '1,000 clicks',                icon: '\u{1F4AA}', check: s => s.totalClicks >= 1000 },
+  { id: 'click10000',   name: 'Click King',        desc: '10,000 clicks',               icon: '\u{1F451}', check: s => s.totalClicks >= 10000 },
+  { id: 'click100k',    name: 'Click God',         desc: '100,000 clicks',              icon: '\u{1F31F}', check: s => s.totalClicks >= 100000 },
+  { id: 'coins100',     name: 'Hundred',           desc: '100 coins earned',            icon: '\u{1FA99}', check: s => s.totalCoins >= 100 },
+  { id: 'coins1k',      name: 'Thousand',          desc: '1,000 coins earned',          icon: '\u{1F4B0}', check: s => s.totalCoins >= 1000 },
+  { id: 'coins100k',    name: 'Rich Gamer',        desc: '100,000 coins earned',        icon: '\u{1F48E}', check: s => s.totalCoins >= 100000 },
+  { id: 'coins1m',      name: 'Millionaire',       desc: '1 million coins earned',      icon: '\u{1F3C6}', check: s => s.totalCoins >= 1000000 },
+  { id: 'coins1b',      name: 'Billionaire',       desc: '1 billion coins earned',      icon: '\u{1F4B8}', check: s => s.totalCoins >= 1000000000 },
+  { id: 'coins1t',      name: 'Trillionaire',      desc: '1 trillion coins earned',     icon: '\u{1F525}', check: s => s.totalCoins >= 1000000000000 },
+  { id: 'coins1qa',     name: 'Beyond Wealth',     desc: '1 quadrillion coins earned',  icon: '\u{1F4AB}', check: s => s.totalCoins >= 1e15 },
+  { id: 'build1',       name: 'Automated',         desc: 'First building bought',       icon: '\u{1F3D7}\uFE0F', check: s => Object.values(s.buildings).some(b => b > 0) },
+  { id: 'build10',      name: 'Factory Owner',     desc: '10 buildings total',          icon: '\u{1F3ED}', check: s => Object.values(s.buildings).reduce((a,b) => a+b, 0) >= 10 },
+  { id: 'build50',      name: 'Empire',            desc: '50 buildings total',          icon: '\u{1F3F0}', check: s => Object.values(s.buildings).reduce((a,b) => a+b, 0) >= 50 },
+  { id: 'build100',     name: 'Tycoon',            desc: '100 buildings total',         icon: '\u{1F3DB}\uFE0F', check: s => Object.values(s.buildings).reduce((a,b) => a+b, 0) >= 100 },
+  { id: 'build200',     name: 'Megacorp',          desc: '200 buildings total',         icon: '\u{1F310}', check: s => Object.values(s.buildings).reduce((a,b) => a+b, 0) >= 200 },
+  { id: 'cps100',       name: 'Passive Power',     desc: '100 CPS reached',             icon: '\u26A1',    check: s => getCPS(s) >= 100 },
+  { id: 'cps10k',       name: 'Money Machine',     desc: '10,000 CPS reached',          icon: '\u{1F4A5}', check: s => getCPS(s) >= 10000 },
+  { id: 'cps1m',        name: 'Coin Factory',      desc: '1M CPS reached',              icon: '\u{1F680}', check: s => getCPS(s) >= 1000000 },
+  { id: 'cps1b',        name: 'Infinite Flow',     desc: '1B CPS reached',              icon: '\u267E\uFE0F', check: s => getCPS(s) >= 1000000000 },
+  { id: 'prestige1',    name: 'Fresh Start',       desc: 'First prestige',              icon: '\u267B\uFE0F', check: s => s.totalPrestiges >= 1 },
 ];
 
 // ===== GAME STATE =====
 let state = getDefaultState();
-let shopDirty = true; // flag to rebuild shop only when needed
+let shopDirty = true;
 
 function getDefaultState() {
   return {
@@ -65,19 +91,21 @@ function getDefaultState() {
     prestigeMultiplier: 1,
     totalPrestiges: 0,
     globalMultiplier: 1,
+    goldenClickPercent: 0,
     lastSave: Date.now(),
   };
 }
 
 // ===== NUMBER FORMATTING =====
+const SUFFIXES = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc', 'Ud', 'Dd'];
+
 function formatNum(n) {
   if (n < 0) return '-' + formatNum(-n);
   if (n < 1) return n === 0 ? '0' : n.toFixed(1);
   if (n < 1000) return Math.floor(n).toLocaleString('en-US');
-  const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx'];
   const tier = Math.floor(Math.log10(Math.abs(n)) / 3);
   if (tier === 0) return Math.floor(n).toLocaleString('en-US');
-  const suffix = suffixes[tier] || 'e' + (tier * 3);
+  const suffix = SUFFIXES[tier] || 'e' + (tier * 3);
   const scale = Math.pow(10, tier * 3);
   const scaled = n / scale;
   return scaled.toFixed(scaled < 10 ? 2 : scaled < 100 ? 1 : 0) + ' ' + suffix;
@@ -103,7 +131,11 @@ function getCPS(s) {
 }
 
 function getEffectiveCPC(s) {
-  return s.cpc * s.prestigeMultiplier;
+  let cpc = s.cpc * s.prestigeMultiplier;
+  if (s.goldenClickPercent > 0) {
+    cpc += getCPS(s) * s.goldenClickPercent;
+  }
+  return cpc;
 }
 
 // ===== CLICK =====
@@ -145,6 +177,10 @@ function buyUpgrade(id) {
     state.buildingMultipliers[upgrade.building] = (state.buildingMultipliers[upgrade.building] || 1) * upgrade.multiplier;
   } else if (upgrade.type === 'global') {
     state.globalMultiplier *= upgrade.multiplier;
+  } else if (upgrade.type === 'golden') {
+    state.goldenClickPercent = 0.01;
+  } else if (upgrade.type === 'golden5') {
+    state.goldenClickPercent = 0.05;
   }
 
   checkAchievements();
@@ -169,6 +205,7 @@ function doPrestige() {
   state.buildingMultipliers = {};
   state.upgrades = [];
   state.globalMultiplier = 1;
+  state.goldenClickPercent = 0;
   checkAchievements();
   shopDirty = true;
 }
@@ -253,7 +290,12 @@ const SAVE_KEY = 'ryozoclicker_save';
 
 function saveGame() {
   state.lastSave = Date.now();
-  localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+  const data = JSON.stringify(state);
+  localStorage.setItem(SAVE_KEY, data);
+  // Cloud save if logged in
+  if (window.RyozoAuth && window.RyozoAuth.saveToCloud) {
+    window.RyozoAuth.saveToCloud('ryozoclicker', state);
+  }
 }
 
 function loadGame() {
@@ -269,13 +311,22 @@ function loadGame() {
         state.coins += offlineEarnings;
         state.totalCoins += offlineEarnings;
         setTimeout(() => {
-          showAchievementPopup({ icon: '\u{1F4A4}', name: 'Offline earnings: ' + formatNum(offlineEarnings) + ' coins' });
+          showAchievementPopup({ icon: '\u{1F4A4}', name: 'Offline: +' + formatNum(offlineEarnings) + ' coins' });
         }, 500);
       }
     }
     return true;
   } catch (e) { return false; }
 }
+
+// Called by auth system when cloud save is loaded
+window.loadClickerFromCloud = function(saveData) {
+  if (!saveData) return;
+  state = { ...getDefaultState(), ...saveData };
+  shopDirty = true;
+  updateCounters();
+  updateShop();
+};
 
 function exportSave() {
   saveGame();
@@ -333,7 +384,7 @@ function updateShop() {
         <span class="shop-icon">${b.icon}</span>
         <div>
           <div class="shop-name">${b.name} <span class="shop-count">${count > 0 ? 'x' + count : ''}</span></div>
-          <div class="shop-desc">${b.desc} · +${formatNum(bCps)} CPS</div>
+          <div class="shop-desc">${b.desc} \u00B7 +${formatNum(bCps)} CPS</div>
         </div>
       </div>
       <div class="shop-price ${canBuy ? 'affordable' : ''}">${formatNum(price)}</div>
@@ -415,10 +466,8 @@ function gameLoop(now) {
     state.totalCoins += earned;
   }
 
-  // Counters update every frame (cheap - just text changes)
   updateCounters();
 
-  // Shop rebuilds only when dirty OR every 500ms (to update affordable state)
   if (shopDirty || now - lastShopUpdate > 500) {
     updateShop();
     shopDirty = false;
@@ -433,26 +482,21 @@ function gameLoop(now) {
 function init() {
   loadGame();
 
-  // Coin click
   const coinBtn = document.getElementById('coinBtn');
   coinBtn.addEventListener('click', (e) => { ensureAudio(); playClickSound(); doClick(e); });
   coinBtn.addEventListener('touchstart', (e) => { e.preventDefault(); ensureAudio(); playClickSound(); doClick(e); }, { passive: false });
 
-  // Tabs
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
-  // Prestige
   document.getElementById('prestigeBtn').addEventListener('click', doPrestige);
 
-  // Save buttons
   document.getElementById('saveBtn').addEventListener('click', () => { saveGame(); showAchievementPopup({ icon: '\u{1F4BE}', name: 'Saved!' }); });
   document.getElementById('exportBtn').addEventListener('click', exportSave);
   document.getElementById('importBtn').addEventListener('click', importSave);
   document.getElementById('resetBtn').addEventListener('click', resetGame);
 
-  // Auto-save every 30s
   setInterval(saveGame, 30000);
 
   shopDirty = true;
