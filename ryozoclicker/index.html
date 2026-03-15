@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>RyozoClicker – Idle Clicker Game im Browser | RyozoGames</title>
-  <meta name="description" content="Spiele RyozoClicker kostenlos im Browser – ein Neon Idle Clicker Game mit Gebäuden, Upgrades, Achievements und Prestige-System. Klicke dich zum Milliardär!">
+  <title>RyozoClicker – Free Idle Clicker Game | RyozoGames</title>
+  <meta name="description" content="Play RyozoClicker for free in your browser – a neon idle clicker game with buildings, upgrades, achievements and a prestige system. Click your way to billions!">
   <meta name="author" content="Mika Gandras">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://ryozogames.com/ryozoclicker/">
 
   <meta property="og:type" content="game">
-  <meta property="og:title" content="RyozoClicker – Idle Clicker Game im Browser">
-  <meta property="og:description" content="Kostenloses Idle Clicker Game mit Neon-Ästhetik. Klicke Coins, kaufe Gebäude, schalte Upgrades frei!">
+  <meta property="og:title" content="RyozoClicker – Free Idle Clicker Game">
+  <meta property="og:description" content="Free idle clicker game with neon aesthetics. Click coins, buy buildings, unlock upgrades!">
   <meta property="og:url" content="https://ryozogames.com/ryozoclicker/">
   <meta property="og:image" content="https://ryozogames.com/img/og-ryozoclicker.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="RyozoGames">
-  <meta property="og:locale" content="de_DE">
+  <meta property="og:locale" content="en_US">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="RyozoClicker – Idle Clicker Game im Browser">
-  <meta name="twitter:description" content="Kostenloses Idle Clicker Game mit Neon-Ästhetik direkt im Browser spielen.">
+  <meta name="twitter:title" content="RyozoClicker – Free Idle Clicker Game">
+  <meta name="twitter:description" content="Free idle clicker game with neon aesthetics. Play directly in your browser.">
   <meta name="twitter:image" content="https://ryozogames.com/img/og-ryozoclicker.png">
 
   <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
@@ -32,7 +32,7 @@
     "@context": "https://schema.org",
     "@type": "VideoGame",
     "name": "RyozoClicker",
-    "description": "Ein Neon Idle Clicker Game mit Gebäuden, Upgrades, Achievements und Prestige-System. Klicke Coins, kaufe Generatoren und werde zum Milliardär.",
+    "description": "A neon idle clicker game with buildings, upgrades, achievements and a prestige system. Click coins, buy generators and become a billionaire.",
     "url": "https://ryozogames.com/ryozoclicker/",
     "genre": ["Idle Game", "Clicker"],
     "gamePlatform": "Web Browser",
@@ -41,7 +41,7 @@
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "EUR"
+      "priceCurrency": "USD"
     },
     "author": {
       "@type": "Person",
@@ -61,7 +61,6 @@
       overflow: hidden;
     }
 
-    /* Grid background */
     .clicker-game::before {
       content: '';
       position: absolute;
@@ -73,7 +72,6 @@
       pointer-events: none;
     }
 
-    /* === LEFT PANEL (Coin area) === */
     .clicker-left {
       flex: 1;
       display: flex;
@@ -85,7 +83,6 @@
       min-height: 400px;
     }
 
-    /* Stats bar */
     .clicker-stats {
       text-align: center;
       margin-bottom: 24px;
@@ -122,7 +119,6 @@
       min-height: 18px;
     }
 
-    /* Coin button */
     #clickArea {
       position: relative;
       width: 200px;
@@ -178,7 +174,6 @@
       transform: scale(0.92);
     }
 
-    /* Click particles */
     .click-particle {
       position: absolute;
       font-size: 18px;
@@ -195,7 +190,6 @@
       100% { opacity: 0; transform: translateY(-80px) translateX(var(--dx, 0px)) scale(0.6); }
     }
 
-    /* Achievement popup */
     .achievement-popup {
       position: fixed;
       top: 80px;
@@ -219,7 +213,6 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* Achievements bar */
     .clicker-achievements {
       display: flex;
       flex-wrap: wrap;
@@ -249,11 +242,8 @@
       box-shadow: 0 0 8px rgba(255, 0, 255, 0.2);
     }
 
-    .ach-badge:hover {
-      transform: scale(1.15);
-    }
+    .ach-badge:hover { transform: scale(1.15); }
 
-    /* Prestige button */
     #prestigeBtn {
       display: none;
       margin-top: 16px;
@@ -274,7 +264,6 @@
       box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
     }
 
-    /* === RIGHT PANEL (Shop) === */
     .clicker-right {
       width: 380px;
       background: rgba(10, 0, 20, 0.8);
@@ -285,7 +274,6 @@
       z-index: 1;
     }
 
-    /* Tabs */
     .shop-tabs {
       display: flex;
       border-bottom: 1px solid var(--border-glow);
@@ -317,7 +305,6 @@
       background: rgba(0, 240, 255, 0.05);
     }
 
-    /* Shop panels */
     .shop-panel {
       flex: 1;
       overflow-y: auto;
@@ -328,7 +315,6 @@
     .shop-panel::-webkit-scrollbar-track { background: transparent; }
     .shop-panel::-webkit-scrollbar-thumb { background: rgba(136, 0, 255, 0.3); border-radius: 3px; }
 
-    /* Shop items */
     .shop-item {
       display: flex;
       align-items: center;
@@ -352,10 +338,7 @@
       border-color: rgba(0, 240, 255, 0.2);
     }
 
-    .shop-item.locked {
-      opacity: 0.4;
-      cursor: default;
-    }
+    .shop-item.locked { opacity: 0.4; cursor: default; }
 
     .shop-item-left {
       display: flex;
@@ -365,58 +348,15 @@
       min-width: 0;
     }
 
-    .shop-icon {
-      font-size: 24px;
-      width: 36px;
-      text-align: center;
-      flex-shrink: 0;
-    }
+    .shop-icon { font-size: 24px; width: 36px; text-align: center; flex-shrink: 0; }
+    .shop-name { font-weight: 700; font-size: 14px; white-space: nowrap; }
+    .shop-count { color: var(--accent-cyan); font-size: 12px; margin-left: 4px; }
+    .shop-desc { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .shop-price { font-weight: 800; font-size: 14px; color: var(--text-muted); white-space: nowrap; padding-left: 8px; }
+    .shop-price.affordable { color: #FFD700; text-shadow: 0 0 6px rgba(255, 215, 0, 0.4); }
+    .upgrade-item .shop-icon { color: var(--accent-green); }
+    .shop-empty { text-align: center; color: var(--text-muted); padding: 30px; font-size: 14px; }
 
-    .shop-name {
-      font-weight: 700;
-      font-size: 14px;
-      white-space: nowrap;
-    }
-
-    .shop-count {
-      color: var(--accent-cyan);
-      font-size: 12px;
-      margin-left: 4px;
-    }
-
-    .shop-desc {
-      font-size: 11px;
-      color: var(--text-muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .shop-price {
-      font-weight: 800;
-      font-size: 14px;
-      color: var(--text-muted);
-      white-space: nowrap;
-      padding-left: 8px;
-    }
-
-    .shop-price.affordable {
-      color: #FFD700;
-      text-shadow: 0 0 6px rgba(255, 215, 0, 0.4);
-    }
-
-    .upgrade-item .shop-icon {
-      color: var(--accent-green);
-    }
-
-    .shop-empty {
-      text-align: center;
-      color: var(--text-muted);
-      padding: 30px;
-      font-size: 14px;
-    }
-
-    /* Save buttons */
     .save-bar {
       display: flex;
       gap: 6px;
@@ -443,40 +383,13 @@
       color: var(--text-secondary);
     }
 
-    /* === MOBILE LAYOUT === */
     @media (max-width: 768px) {
-      .clicker-game {
-        flex-direction: column;
-        min-height: auto;
-      }
-
-      .clicker-left {
-        min-height: 340px;
-        padding: 16px;
-      }
-
-      #clickArea {
-        width: 160px;
-        height: 160px;
-        margin: 8px 0 16px;
-      }
-
-      #coinBtn {
-        width: 160px;
-        height: 160px;
-        font-size: 52px;
-      }
-
-      .clicker-right {
-        width: 100%;
-        border-left: none;
-        border-top: 1px solid var(--border-glow);
-        max-height: 50vh;
-      }
-
-      .shop-panel {
-        max-height: 40vh;
-      }
+      .clicker-game { flex-direction: column; min-height: auto; }
+      .clicker-left { min-height: 340px; padding: 16px; }
+      #clickArea { width: 160px; height: 160px; margin: 8px 0 16px; }
+      #coinBtn { width: 160px; height: 160px; font-size: 52px; }
+      .clicker-right { width: 100%; border-left: none; border-top: 1px solid var(--border-glow); max-height: 50vh; }
+      .shop-panel { max-height: 40vh; }
     }
 
     @media (max-width: 400px) {
@@ -488,32 +401,28 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="site-header">
-    <nav class="nav-container" aria-label="Hauptnavigation">
+    <nav class="nav-container" aria-label="Main navigation">
       <a href="/" class="nav-logo">RyozoGames</a>
-      <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links">
         <li><a href="/">Home</a></li>
-        <li><a href="/ryozoclicker/" class="active">Spiele</a></li>
-        <li><a href="/about/">Über uns</a></li>
-        <li><a href="/impressum/">Impressum</a></li>
-        <li><a href="/datenschutz/">Datenschutz</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/impressum/">Legal Notice</a></li>
+        <li><a href="/datenschutz/">Privacy</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
-    <!-- GAME -->
     <div class="clicker-game">
-      <!-- LEFT: Coin + Stats -->
       <div class="clicker-left">
         <div class="clicker-stats">
           <div class="coin-display" id="coinCount">0</div>
-          <div class="cps-display" id="cpsCount">0/Sek</div>
-          <div class="cpc-display" id="cpcCount">1/Klick</div>
+          <div class="cps-display" id="cpsCount">0/sec</div>
+          <div class="cpc-display" id="cpcCount">1/click</div>
           <div class="prestige-display" id="prestigeInfo"></div>
         </div>
 
@@ -522,14 +431,12 @@
         </div>
 
         <div class="clicker-achievements" id="achievementList"></div>
-
         <button id="prestigeBtn"></button>
       </div>
 
-      <!-- RIGHT: Shop -->
       <div class="clicker-right">
         <div class="shop-tabs">
-          <button class="tab-btn active" data-tab="buildings">Gebäude</button>
+          <button class="tab-btn active" data-tab="buildings">Buildings</button>
           <button class="tab-btn" data-tab="upgrades">Upgrades</button>
         </div>
 
@@ -542,7 +449,7 @@
         </div>
 
         <div class="save-bar">
-          <button id="saveBtn">Speichern</button>
+          <button id="saveBtn">Save</button>
           <button id="exportBtn">Export</button>
           <button id="importBtn">Import</button>
           <button id="resetBtn">Reset</button>
@@ -550,64 +457,62 @@
       </div>
     </div>
 
-    <!-- SEO CONTENT -->
     <article class="game-content">
-      <h2>Über RyozoClicker</h2>
-      <p>RyozoClicker ist ein kostenloses Idle Clicker Game, das du direkt in deinem Browser spielen kannst. Inspiriert von Klassikern wie Cookie Clicker, verbindet RyozoClicker süchtig machendes Klick-Gameplay mit einer einzigartigen Neon-Ästhetik. Kein Download, keine Anmeldung – einfach klicken und loslegen!</p>
-      <p>Dein Ziel: So viele Coins wie möglich sammeln! Klicke auf den großen Neon-Coin in der Mitte, um Coins zu verdienen. Mit deinen Coins kaufst du Gebäude, die automatisch Coins für dich generieren – auch wenn du nicht klickst. Je mehr Gebäude und Upgrades du hast, desto schneller wächst dein Vermögen.</p>
+      <h2>About RyozoClicker</h2>
+      <p>RyozoClicker is a free idle clicker game you can play directly in your browser. Inspired by classics like Cookie Clicker, RyozoClicker combines addictive clicking gameplay with a unique neon aesthetic. No download, no sign-up – just click and go!</p>
+      <p>Your goal: Collect as many coins as possible! Click the big neon coin in the center to earn coins. Use your coins to buy buildings that automatically generate coins for you – even when you're not clicking. The more buildings and upgrades you have, the faster your fortune grows.</p>
 
-      <h2>Spielmechaniken</h2>
+      <h2>Game Mechanics</h2>
       <table class="controls-table">
         <thead>
-          <tr><th>Mechanik</th><th>Beschreibung</th></tr>
+          <tr><th>Mechanic</th><th>Description</th></tr>
         </thead>
         <tbody>
-          <tr><td><strong>Klicken</strong></td><td>Klicke auf den Coin, um Coins zu verdienen. Upgrades erhöhen deinen Ertrag pro Klick.</td></tr>
-          <tr><td><strong>Gebäude</strong></td><td>7 verschiedene Gebäude von Cursor bis Dimensions-Tor. Jedes Gebäude generiert automatisch Coins pro Sekunde (CPS).</td></tr>
-          <tr><td><strong>Upgrades</strong></td><td>Einmalige Verbesserungen, die deine Klick-Power oder die Effizienz deiner Gebäude erhöhen.</td></tr>
-          <tr><td><strong>Prestige</strong></td><td>Ab 1 Million Coins kannst du einen Prestige-Reset machen: Alles zurücksetzen, dafür einen permanenten Multiplikator erhalten.</td></tr>
-          <tr><td><strong>Achievements</strong></td><td>15 Erfolge zum Freischalten – vom ersten Klick bis zum Milliardär.</td></tr>
+          <tr><td><strong>Clicking</strong></td><td>Click the coin to earn coins. Upgrades increase your earnings per click.</td></tr>
+          <tr><td><strong>Buildings</strong></td><td>7 different buildings from Cursor to Dimension Gate. Each building automatically generates coins per second (CPS).</td></tr>
+          <tr><td><strong>Upgrades</strong></td><td>One-time improvements that boost your click power or building efficiency.</td></tr>
+          <tr><td><strong>Prestige</strong></td><td>At 1 million coins you can do a prestige reset: reset everything, but gain a permanent multiplier.</td></tr>
+          <tr><td><strong>Achievements</strong></td><td>15 achievements to unlock – from your first click to becoming a billionaire.</td></tr>
         </tbody>
       </table>
 
-      <h2>Gebäude</h2>
+      <h2>Buildings</h2>
       <table class="diff-table">
         <thead>
-          <tr><th>Gebäude</th><th>Basis-CPS</th><th>Startpreis</th></tr>
+          <tr><th>Building</th><th>Base CPS</th><th>Starting Price</th></tr>
         </thead>
         <tbody>
-          <tr><td>Cursor</td><td>0,1</td><td>15</td></tr>
+          <tr><td>Cursor</td><td>0.1</td><td>15</td></tr>
           <tr><td>Server</td><td>1</td><td>100</td></tr>
-          <tr><td>GPU Farm</td><td>8</td><td>1.100</td></tr>
-          <tr><td>Bot-Netzwerk</td><td>47</td><td>12.000</td></tr>
-          <tr><td>KI-Modul</td><td>260</td><td>130.000</td></tr>
-          <tr><td>Quantenrechner</td><td>1.400</td><td>1.400.000</td></tr>
-          <tr><td>Dimensions-Tor</td><td>7.800</td><td>20.000.000</td></tr>
+          <tr><td>GPU Farm</td><td>8</td><td>1,100</td></tr>
+          <tr><td>Bot Network</td><td>47</td><td>12,000</td></tr>
+          <tr><td>AI Module</td><td>260</td><td>130,000</td></tr>
+          <tr><td>Quantum Computer</td><td>1,400</td><td>1,400,000</td></tr>
+          <tr><td>Dimension Gate</td><td>7,800</td><td>20,000,000</td></tr>
         </tbody>
       </table>
-      <p>Der Preis jedes Gebäudes steigt mit jedem Kauf um 15%. Plane deine Investitionen also klug!</p>
+      <p>Each building's price increases by 15% with every purchase. Plan your investments wisely!</p>
 
-      <h2>Tipps & Tricks</h2>
-      <p><strong>Klicke am Anfang aktiv:</strong> In den ersten Minuten ist Klicken deine Haupteinnahmequelle. Spare für den ersten Cursor, um passives Einkommen zu starten.</p>
-      <p><strong>Investiere in Gebäude:</strong> Gebäude generieren auch Coins, wenn du nicht aktiv klickst. Je mehr du hast, desto schneller wächst dein Vermögen.</p>
-      <p><strong>Upgrades nicht vergessen:</strong> Gebäude-Upgrades verdoppeln die CPS eines Gebäudetyps. Das lohnt sich besonders bei Gebäuden, von denen du viele hast.</p>
-      <p><strong>Prestige nutzen:</strong> Wenn dein Fortschritt stagniert, mache einen Prestige-Reset. Der permanente Multiplikator beschleunigt deinen nächsten Durchlauf enorm.</p>
-      <p><strong>Dein Fortschritt wird gespeichert:</strong> RyozoClicker speichert automatisch alle 30 Sekunden. Dein Fortschritt bleibt also erhalten, auch wenn du den Browser schließt. Du verdienst sogar offline weiter (bis zu 24 Stunden)!</p>
+      <h2>Tips & Tricks</h2>
+      <p><strong>Click actively at the start:</strong> In the first few minutes, clicking is your main source of income. Save up for the first Cursor to start earning passive income.</p>
+      <p><strong>Invest in buildings:</strong> Buildings generate coins even when you're not actively clicking. The more you have, the faster your fortune grows.</p>
+      <p><strong>Don't forget upgrades:</strong> Building upgrades double a building type's CPS. This is especially worthwhile for buildings you own many of.</p>
+      <p><strong>Use prestige:</strong> When your progress stagnates, do a prestige reset. The permanent multiplier will massively accelerate your next run.</p>
+      <p><strong>Your progress is saved:</strong> RyozoClicker auto-saves every 30 seconds. Your progress is preserved even if you close the browser. You even earn offline (up to 24 hours)!</p>
     </article>
   </main>
 
-  <!-- FOOTER -->
   <footer class="site-footer">
-    <nav class="footer-links" aria-label="Footer-Navigation">
+    <nav class="footer-links" aria-label="Footer navigation">
       <a href="/">Home</a>
       <a href="/ryozodash/">RyozoDash</a>
       <a href="/snake3d/">Snake 3D</a>
       <a href="/ryozoclicker/">RyozoClicker</a>
-      <a href="/about/">Über uns</a>
-      <a href="/impressum/">Impressum</a>
-      <a href="/datenschutz/">Datenschutz</a>
+      <a href="/about/">About</a>
+      <a href="/impressum/">Legal Notice</a>
+      <a href="/datenschutz/">Privacy</a>
     </nav>
-    <p class="footer-copy">&copy; 2026 RyozoGames – Mika Gandras. Alle Rechte vorbehalten.</p>
+    <p class="footer-copy">&copy; 2026 RyozoGames – Mika Gandras. All rights reserved.</p>
   </footer>
 
   <script src="/js/main.js"></script>

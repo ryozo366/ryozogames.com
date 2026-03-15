@@ -1,27 +1,26 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>RyozoDash – Geometry Dash im Browser Spielen | RyozoGames</title>
-  <meta name="description" content="Spiele RyozoDash kostenlos im Browser – ein Geometry Dash inspirierter Plattformer mit Neon-Grafik, drei Schwierigkeitsgraden und prozedural generierten Leveln.">
-  <meta name="author" content="Mika Gandras">
+  <title>RyozoDash – Play Geometry Dash in Browser | RyozoGames</title>
+  <meta name="description" content="Play RyozoDash for free in your browser – a Geometry Dash inspired platformer with neon graphics, three difficulty levels and procedurally generated levels.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://ryozogames.com/ryozodash/">
 
   <meta property="og:type" content="game">
-  <meta property="og:title" content="RyozoDash – Geometry Dash im Browser">
-  <meta property="og:description" content="Kostenloser Geometry Dash inspirierter Plattformer mit Neon-Grafik und drei Schwierigkeitsgraden.">
+  <meta property="og:title" content="RyozoDash – Geometry Dash in Browser">
+  <meta property="og:description" content="Free Geometry Dash inspired platformer with neon graphics and three difficulty levels.">
   <meta property="og:url" content="https://ryozogames.com/ryozodash/">
   <meta property="og:image" content="https://ryozogames.com/img/og-ryozodash.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="RyozoGames">
-  <meta property="og:locale" content="de_DE">
+  <meta property="og:locale" content="en_US">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="RyozoDash – Geometry Dash im Browser">
-  <meta name="twitter:description" content="Kostenloser Geometry Dash Plattformer direkt im Browser spielen.">
+  <meta name="twitter:title" content="RyozoDash – Geometry Dash in Browser">
+  <meta name="twitter:description" content="Free Geometry Dash platformer – play directly in your browser.">
   <meta name="twitter:image" content="https://ryozogames.com/img/og-ryozodash.png">
 
   <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
@@ -32,7 +31,7 @@
     "@context": "https://schema.org",
     "@type": "VideoGame",
     "name": "RyozoDash",
-    "description": "Ein Geometry Dash inspirierter Plattformer mit Neon-Grafik, prozedural generierten Leveln und drei Schwierigkeitsgraden.",
+    "description": "A Geometry Dash inspired platformer with neon graphics, procedurally generated levels and three difficulty levels.",
     "url": "https://ryozogames.com/ryozodash/",
     "genre": ["Platformer", "Rhythm Game"],
     "gamePlatform": "Web Browser",
@@ -41,11 +40,7 @@
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "EUR"
-    },
-    "author": {
-      "@type": "Person",
-      "name": "Mika Gandras"
+      "priceCurrency": "USD"
     }
   }
   </script>
@@ -54,110 +49,105 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="site-header">
-    <nav class="nav-container" aria-label="Hauptnavigation">
+    <nav class="nav-container" aria-label="Main navigation">
       <a href="/" class="nav-logo">RyozoGames</a>
-      <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links">
         <li><a href="/">Home</a></li>
-        <li><a href="/ryozodash/" class="active">Spiele</a></li>
-        <li><a href="/about/">Über uns</a></li>
-        <li><a href="/impressum/">Impressum</a></li>
-        <li><a href="/datenschutz/">Datenschutz</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/impressum/">Legal Notice</a></li>
+        <li><a href="/datenschutz/">Privacy</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
-    <!-- GAME AREA -->
     <div class="game-wrapper">
       <canvas id="game"></canvas>
 
       <div class="game-ui">
         <div class="game-hud" id="hud" style="display:none;">
-          <span class="attempt" id="attemptText">Versuch 1</span>
+          <span class="attempt" id="attemptText">Attempt 1</span>
           <div id="percentText">0%</div>
         </div>
         <div id="progressBar"></div>
 
         <div id="startScreen">
           <h1>RYOZODASH</h1>
-          <p class="sub">Klicke, tippe oder drücke Leertaste zum Springen</p>
+          <p class="sub">Click, tap or press spacebar to jump</p>
           <div class="difficulty-select">
-            <button class="diff-btn" data-diff="easy">LEICHT</button>
+            <button class="diff-btn" data-diff="easy">EASY</button>
             <button class="diff-btn selected" data-diff="normal">NORMAL</button>
-            <button class="diff-btn" data-diff="hard">SCHWER</button>
+            <button class="diff-btn" data-diff="hard">HARD</button>
           </div>
           <div class="best-display" id="bestDisplay"></div>
-          <button class="game-btn" id="playBtn">SPIELEN</button>
-          <p class="controls-hint">Leertaste / Klick / Touch zum Springen</p>
+          <button class="game-btn" id="playBtn">PLAY</button>
+          <p class="controls-hint">Spacebar / Click / Touch to jump</p>
         </div>
 
         <div id="deathScreen" style="display:none;">
           <h2>CRASH!</h2>
           <p class="score" id="scoreText">0%</p>
-          <p class="best" id="bestText">Bester: 0%</p>
-          <button class="game-btn" id="retryBtn">NOCHMAL</button>
+          <p class="best" id="bestText">Best: 0%</p>
+          <button class="game-btn" id="retryBtn">RETRY</button>
         </div>
       </div>
     </div>
 
-    <!-- GAME CONTENT (SEO) -->
     <article class="game-content">
-      <h2>Über RyozoDash</h2>
-      <p>RyozoDash ist ein kostenloser, Geometry Dash inspirierter Plattformer, den du direkt in deinem Browser spielen kannst. Das Spiel kombiniert rhythmusbasiertes Gameplay mit einer neonleuchtenden Ästhetik und prozedural generierten Leveln. Kein Download nötig – einfach spielen!</p>
-      <p>Dein Ziel ist es, den kleinen Würfel sicher durch ein Feld voller Hindernisse zu steuern. Spikes, Blöcke und Abgründe stehen dir im Weg. Mit nur einer einzigen Taste – Springen – musst du den perfekten Moment abpassen, um jedes Hindernis zu überwinden.</p>
+      <h2>About RyozoDash</h2>
+      <p>RyozoDash is a free, Geometry Dash inspired platformer you can play directly in your browser. The game combines rhythm-based gameplay with a glowing neon aesthetic and procedurally generated levels. No download needed – just play!</p>
+      <p>Your goal is to safely guide the small cube through a field full of obstacles. Spikes, blocks and gaps stand in your way. With just one action – jump – you need to time the perfect moment to overcome each obstacle.</p>
 
-      <h2>Steuerung</h2>
+      <h2>Controls</h2>
       <table class="controls-table">
         <thead>
-          <tr><th>Eingabe</th><th>Aktion</th></tr>
+          <tr><th>Input</th><th>Action</th></tr>
         </thead>
         <tbody>
-          <tr><td><kbd>Leertaste</kbd></td><td>Springen</td></tr>
-          <tr><td><kbd>W</kbd> / <kbd>↑</kbd></td><td>Springen (alternativ)</td></tr>
-          <tr><td>Mausklick</td><td>Springen</td></tr>
-          <tr><td>Touchscreen tippen</td><td>Springen (Mobile)</td></tr>
+          <tr><td><kbd>Spacebar</kbd></td><td>Jump</td></tr>
+          <tr><td><kbd>W</kbd> / <kbd>&#x2191;</kbd></td><td>Jump (alternative)</td></tr>
+          <tr><td>Mouse click</td><td>Jump</td></tr>
+          <tr><td>Touchscreen tap</td><td>Jump (Mobile)</td></tr>
         </tbody>
       </table>
 
-      <h2>Schwierigkeitsgrade</h2>
-      <p>RyozoDash bietet drei Schwierigkeitsgrade, die sich in Geschwindigkeit, Levellänge und Hindernisdichte unterscheiden:</p>
+      <h2>Difficulty Levels</h2>
+      <p>RyozoDash offers three difficulty levels that differ in speed, level length and obstacle density:</p>
       <table class="diff-table">
         <thead>
-          <tr><th>Eigenschaft</th><th>Leicht</th><th>Normal</th><th>Schwer</th></tr>
+          <tr><th>Property</th><th>Easy</th><th>Normal</th><th>Hard</th></tr>
         </thead>
         <tbody>
-          <tr><td>Geschwindigkeit</td><td>Langsam</td><td>Mittel</td><td>Schnell</td></tr>
-          <tr><td>Levellänge</td><td>Kurz</td><td>Mittel</td><td>Lang</td></tr>
-          <tr><td>Hindernisse</td><td>Wenige, einfache</td><td>Gemischt</td><td>Viele, komplexe</td></tr>
-          <tr><td>Sprung</td><td>Hoch & langsam</td><td>Ausgewogen</td><td>Niedrig & schnell</td></tr>
+          <tr><td>Speed</td><td>Slow</td><td>Medium</td><td>Fast</td></tr>
+          <tr><td>Level Length</td><td>Short</td><td>Medium</td><td>Long</td></tr>
+          <tr><td>Obstacles</td><td>Few, simple</td><td>Mixed</td><td>Many, complex</td></tr>
+          <tr><td>Jump</td><td>High &amp; slow</td><td>Balanced</td><td>Low &amp; fast</td></tr>
         </tbody>
       </table>
 
-      <h2>Tipps & Tricks</h2>
-      <p><strong>Timing ist alles:</strong> Springe nicht zu früh und nicht zu spät. Beobachte die Hindernisse und finde den richtigen Rhythmus.</p>
-      <p><strong>Übung macht den Meister:</strong> Jedes Level wird prozedural generiert, aber die Hindernismuster wiederholen sich. Je öfter du spielst, desto besser erkennst du die Pattern.</p>
-      <p><strong>Starte auf Leicht:</strong> Wenn du neu bist, beginne mit dem Leicht-Modus. Dort hast du mehr Zeit zum Reagieren und die Hindernisse sind weiter auseinander.</p>
-      <p><strong>Dein Fortschritt wird gespeichert:</strong> Deine Bestleistung wird pro Schwierigkeitsgrad lokal gespeichert, sodass du jederzeit versuchen kannst, deinen Rekord zu brechen.</p>
+      <h2>Tips & Tricks</h2>
+      <p><strong>Timing is everything:</strong> Don't jump too early or too late. Watch the obstacles and find the right rhythm.</p>
+      <p><strong>Practice makes perfect:</strong> Every level is procedurally generated, but the obstacle patterns repeat. The more you play, the better you'll recognize the patterns.</p>
+      <p><strong>Start on Easy:</strong> If you're new, start with Easy mode. You'll have more time to react and the obstacles are spaced further apart.</p>
+      <p><strong>Your progress is saved:</strong> Your best score is saved locally per difficulty level, so you can always try to beat your record.</p>
     </article>
   </main>
 
-  <!-- FOOTER -->
   <footer class="site-footer">
-    <nav class="footer-links" aria-label="Footer-Navigation">
+    <nav class="footer-links" aria-label="Footer navigation">
       <a href="/">Home</a>
       <a href="/ryozodash/">RyozoDash</a>
       <a href="/snake3d/">Snake 3D</a>
       <a href="/ryozoclicker/">RyozoClicker</a>
-      <a href="/about/">Über uns</a>
-      <a href="/impressum/">Impressum</a>
-      <a href="/datenschutz/">Datenschutz</a>
+      <a href="/about/">About</a>
+      <a href="/impressum/">Legal Notice</a>
+      <a href="/datenschutz/">Privacy</a>
     </nav>
-    <p class="footer-copy">&copy; 2026 RyozoGames – Mika Gandras. Alle Rechte vorbehalten.</p>
+    <p class="footer-copy">&copy; 2026 RyozoGames. All rights reserved.</p>
   </footer>
 
   <script src="/js/main.js"></script>

@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
       toggle.setAttribute('aria-expanded', navLinks.classList.contains('open'));
     });
 
-    // Close nav when clicking a link
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => navLinks.classList.remove('open'));
     });
@@ -28,11 +27,11 @@ function showCookieConsent() {
   const banner = document.createElement('div');
   banner.id = 'cookieBanner';
   banner.innerHTML = `
-    <p>Diese Website verwendet Cookies und LocalStorage, um dein Spielerlebnis zu verbessern.
-       <a href="/datenschutz/">Mehr erfahren</a></p>
+    <p>This website uses cookies and LocalStorage to improve your gaming experience.
+       <a href="/datenschutz/">Learn more</a></p>
     <div class="cookie-buttons">
-      <button class="cookie-accept" id="cookieAccept">Akzeptieren</button>
-      <button class="cookie-reject" id="cookieReject">Nur notwendige</button>
+      <button class="cookie-accept" id="cookieAccept">Accept</button>
+      <button class="cookie-reject" id="cookieReject">Essential only</button>
     </div>
   `;
   document.body.appendChild(banner);

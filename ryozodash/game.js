@@ -603,7 +603,7 @@ function die() {
       gameState = 'dead';
       stopBeat();
       document.getElementById('scoreText').textContent = percent + '%';
-      document.getElementById('bestText').textContent = 'Bester: ' + getBest() + '%';
+      document.getElementById('bestText').textContent = 'Best: ' + getBest() + '%';
       document.getElementById('deathScreen').style.display = 'block';
       document.getElementById('hud').style.display = 'none';
     }
@@ -767,7 +767,7 @@ function setDifficulty(diff) {
   const bestDisplay = document.getElementById('bestDisplay');
   if (bestDisplay) {
     const best = getBest();
-    bestDisplay.textContent = best > 0 ? 'Bester: ' + best + '%' : '';
+    bestDisplay.textContent = best > 0 ? 'Best: ' + best + '%' : '';
   }
 }
 
@@ -780,7 +780,7 @@ function startGame() {
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('deathScreen').style.display = 'none';
   document.getElementById('hud').style.display = 'flex';
-  document.getElementById('attemptText').textContent = 'Versuch ' + attempt;
+  document.getElementById('attemptText').textContent = 'Attempt ' + attempt;
   document.getElementById('progressBar').style.width = '0%';
   startBeat();
 }

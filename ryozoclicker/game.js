@@ -4,52 +4,53 @@
 
 // ===== BUILDINGS =====
 const BUILDING_DATA = [
-  { id: 'cursor',    name: 'Cursor',          icon: '🖱️', baseCps: 0.1,   basePrice: 15,         desc: 'Auto-Klicker' },
-  { id: 'server',    name: 'Server',          icon: '🖥️', baseCps: 1,     basePrice: 100,        desc: 'Mining-Server' },
-  { id: 'gpu',       name: 'GPU Farm',        icon: '⚡', baseCps: 8,     basePrice: 1100,       desc: 'Grafikkarten-Farm' },
-  { id: 'botnet',    name: 'Bot-Netzwerk',    icon: '🤖', baseCps: 47,    basePrice: 12000,      desc: 'Automatisierte Bots' },
-  { id: 'ai',        name: 'KI-Modul',        icon: '🧠', baseCps: 260,   basePrice: 130000,     desc: 'Künstliche Intelligenz' },
-  { id: 'quantum',   name: 'Quantenrechner',  icon: '⚛️', baseCps: 1400,  basePrice: 1400000,    desc: 'Quantencomputer' },
-  { id: 'dimension', name: 'Dimensions-Tor',  icon: '🌀', baseCps: 7800,  basePrice: 20000000,   desc: 'Interdimensionales Portal' },
+  { id: 'cursor',    name: 'Cursor',           icon: '\u{1F5B1}\uFE0F', baseCps: 0.1,   basePrice: 15,         desc: 'Auto-Clicker' },
+  { id: 'server',    name: 'Server',           icon: '\u{1F5A5}\uFE0F', baseCps: 1,     basePrice: 100,        desc: 'Mining Server' },
+  { id: 'gpu',       name: 'GPU Farm',         icon: '\u26A1',          baseCps: 8,     basePrice: 1100,       desc: 'Graphics Card Farm' },
+  { id: 'botnet',    name: 'Bot Network',      icon: '\u{1F916}',       baseCps: 47,    basePrice: 12000,      desc: 'Automated Bots' },
+  { id: 'ai',        name: 'AI Module',        icon: '\u{1F9E0}',       baseCps: 260,   basePrice: 130000,     desc: 'Artificial Intelligence' },
+  { id: 'quantum',   name: 'Quantum Computer', icon: '\u269B\uFE0F',    baseCps: 1400,  basePrice: 1400000,    desc: 'Quantum Processor' },
+  { id: 'dimension', name: 'Dimension Gate',   icon: '\u{1F300}',       baseCps: 7800,  basePrice: 20000000,   desc: 'Interdimensional Portal' },
 ];
 
 // ===== UPGRADES =====
 const UPGRADE_DATA = [
-  { id: 'click2',     name: 'Click Power x2',     price: 100,       desc: 'Verdoppelt Coins pro Klick',    type: 'click', multiplier: 2 },
-  { id: 'click5',     name: 'Click Power x5',     price: 5000,      desc: '5x Coins pro Klick',            type: 'click', multiplier: 5 },
-  { id: 'click10',    name: 'Click Power x10',    price: 50000,     desc: '10x Coins pro Klick',           type: 'click', multiplier: 10 },
-  { id: 'cursor_2x',  name: 'Cursor Turbo',       price: 500,       desc: 'Cursor CPS x2',                 type: 'building', building: 'cursor', multiplier: 2 },
-  { id: 'server_2x',  name: 'Server Boost',       price: 5000,      desc: 'Server CPS x2',                 type: 'building', building: 'server', multiplier: 2 },
-  { id: 'gpu_2x',     name: 'GPU Overclock',      price: 50000,     desc: 'GPU Farm CPS x2',               type: 'building', building: 'gpu', multiplier: 2 },
-  { id: 'botnet_2x',  name: 'Bot Schwarm',        price: 500000,    desc: 'Bot-Netzwerk CPS x2',           type: 'building', building: 'botnet', multiplier: 2 },
-  { id: 'ai_2x',      name: 'Deep Learning',      price: 5000000,   desc: 'KI-Modul CPS x2',              type: 'building', building: 'ai', multiplier: 2 },
-  { id: 'quantum_2x', name: 'Qubit Boost',        price: 50000000,  desc: 'Quantenrechner CPS x2',         type: 'building', building: 'quantum', multiplier: 2 },
-  { id: 'dim_2x',     name: 'Multiversum',        price: 500000000, desc: 'Dimensions-Tor CPS x2',         type: 'building', building: 'dimension', multiplier: 2 },
-  { id: 'global_2x',  name: 'Neon Overdrive',     price: 10000000,  desc: 'Alle CPS x2',                   type: 'global', multiplier: 2 },
-  { id: 'global_5x',  name: 'Hyper Neon',         price: 1000000000,desc: 'Alle CPS x5',                   type: 'global', multiplier: 5 },
+  { id: 'click2',     name: 'Click Power x2',     price: 100,       desc: 'Double coins per click',        type: 'click', multiplier: 2 },
+  { id: 'click5',     name: 'Click Power x5',     price: 5000,      desc: '5x coins per click',            type: 'click', multiplier: 5 },
+  { id: 'click10',    name: 'Click Power x10',    price: 50000,     desc: '10x coins per click',           type: 'click', multiplier: 10 },
+  { id: 'cursor_2x',  name: 'Cursor Turbo',       price: 500,       desc: 'Cursor CPS x2',                type: 'building', building: 'cursor', multiplier: 2 },
+  { id: 'server_2x',  name: 'Server Boost',       price: 5000,      desc: 'Server CPS x2',                type: 'building', building: 'server', multiplier: 2 },
+  { id: 'gpu_2x',     name: 'GPU Overclock',      price: 50000,     desc: 'GPU Farm CPS x2',              type: 'building', building: 'gpu', multiplier: 2 },
+  { id: 'botnet_2x',  name: 'Bot Swarm',          price: 500000,    desc: 'Bot Network CPS x2',           type: 'building', building: 'botnet', multiplier: 2 },
+  { id: 'ai_2x',      name: 'Deep Learning',      price: 5000000,   desc: 'AI Module CPS x2',             type: 'building', building: 'ai', multiplier: 2 },
+  { id: 'quantum_2x', name: 'Qubit Boost',        price: 50000000,  desc: 'Quantum Computer CPS x2',      type: 'building', building: 'quantum', multiplier: 2 },
+  { id: 'dim_2x',     name: 'Multiverse',         price: 500000000, desc: 'Dimension Gate CPS x2',         type: 'building', building: 'dimension', multiplier: 2 },
+  { id: 'global_2x',  name: 'Neon Overdrive',     price: 10000000,  desc: 'All CPS x2',                   type: 'global', multiplier: 2 },
+  { id: 'global_5x',  name: 'Hyper Neon',         price: 1000000000,desc: 'All CPS x5',                   type: 'global', multiplier: 5 },
 ];
 
 // ===== ACHIEVEMENTS =====
 const ACHIEVEMENT_DATA = [
-  { id: 'click1',      name: 'Erster Klick',       desc: '1 Coin geklickt',                icon: '👆', check: s => s.totalClicks >= 1 },
-  { id: 'click100',    name: 'Klick-Anfänger',     desc: '100 Klicks',                     icon: '✊', check: s => s.totalClicks >= 100 },
-  { id: 'click1000',   name: 'Klick-Profi',        desc: '1.000 Klicks',                   icon: '💪', check: s => s.totalClicks >= 1000 },
-  { id: 'click10000',  name: 'Klick-König',        desc: '10.000 Klicks',                  icon: '👑', check: s => s.totalClicks >= 10000 },
-  { id: 'coins100',    name: 'Hundert',            desc: '100 Coins verdient',             icon: '🪙', check: s => s.totalCoins >= 100 },
-  { id: 'coins1k',     name: 'Tausender',          desc: '1.000 Coins verdient',           icon: '💰', check: s => s.totalCoins >= 1000 },
-  { id: 'coins100k',   name: 'Reicher Gamer',      desc: '100.000 Coins verdient',         icon: '💎', check: s => s.totalCoins >= 100000 },
-  { id: 'coins1m',     name: 'Millionär',          desc: '1 Million Coins verdient',       icon: '🏆', check: s => s.totalCoins >= 1000000 },
-  { id: 'coins1b',     name: 'Milliardär',         desc: '1 Milliarde Coins verdient',     icon: '🌟', check: s => s.totalCoins >= 1000000000 },
-  { id: 'build1',      name: 'Automatisiert',      desc: 'Erstes Gebäude gekauft',         icon: '🏗️', check: s => Object.values(s.buildings).some(b => b > 0) },
-  { id: 'build10',     name: 'Fabrikant',          desc: '10 Gebäude insgesamt',           icon: '🏭', check: s => Object.values(s.buildings).reduce((a,b) => a+b, 0) >= 10 },
-  { id: 'build50',     name: 'Imperium',           desc: '50 Gebäude insgesamt',           icon: '🏰', check: s => Object.values(s.buildings).reduce((a,b) => a+b, 0) >= 50 },
-  { id: 'cps100',      name: 'Passive Power',      desc: '100 CPS erreicht',               icon: '⚡', check: s => getCPS(s) >= 100 },
-  { id: 'cps10k',      name: 'Geld-Maschine',      desc: '10.000 CPS erreicht',            icon: '🔥', check: s => getCPS(s) >= 10000 },
-  { id: 'prestige1',   name: 'Neustart',           desc: 'Erstes Prestige',                icon: '♻️', check: s => s.totalPrestiges >= 1 },
+  { id: 'click1',      name: 'First Click',        desc: '1 coin clicked',              icon: '\u{1F446}', check: s => s.totalClicks >= 1 },
+  { id: 'click100',    name: 'Click Beginner',     desc: '100 clicks',                  icon: '\u270A',    check: s => s.totalClicks >= 100 },
+  { id: 'click1000',   name: 'Click Pro',          desc: '1,000 clicks',                icon: '\u{1F4AA}', check: s => s.totalClicks >= 1000 },
+  { id: 'click10000',  name: 'Click King',         desc: '10,000 clicks',               icon: '\u{1F451}', check: s => s.totalClicks >= 10000 },
+  { id: 'coins100',    name: 'Hundred',            desc: '100 coins earned',            icon: '\u{1FA99}', check: s => s.totalCoins >= 100 },
+  { id: 'coins1k',     name: 'Thousand',           desc: '1,000 coins earned',          icon: '\u{1F4B0}', check: s => s.totalCoins >= 1000 },
+  { id: 'coins100k',   name: 'Rich Gamer',         desc: '100,000 coins earned',        icon: '\u{1F48E}', check: s => s.totalCoins >= 100000 },
+  { id: 'coins1m',     name: 'Millionaire',        desc: '1 million coins earned',      icon: '\u{1F3C6}', check: s => s.totalCoins >= 1000000 },
+  { id: 'coins1b',     name: 'Billionaire',        desc: '1 billion coins earned',      icon: '\u{1F31F}', check: s => s.totalCoins >= 1000000000 },
+  { id: 'build1',      name: 'Automated',          desc: 'First building bought',       icon: '\u{1F3D7}\uFE0F', check: s => Object.values(s.buildings).some(b => b > 0) },
+  { id: 'build10',     name: 'Factory Owner',      desc: '10 buildings total',          icon: '\u{1F3ED}', check: s => Object.values(s.buildings).reduce((a,b) => a+b, 0) >= 10 },
+  { id: 'build50',     name: 'Empire',             desc: '50 buildings total',          icon: '\u{1F3F0}', check: s => Object.values(s.buildings).reduce((a,b) => a+b, 0) >= 50 },
+  { id: 'cps100',      name: 'Passive Power',      desc: '100 CPS reached',             icon: '\u26A1',    check: s => getCPS(s) >= 100 },
+  { id: 'cps10k',      name: 'Money Machine',      desc: '10,000 CPS reached',          icon: '\u{1F525}', check: s => getCPS(s) >= 10000 },
+  { id: 'prestige1',   name: 'Fresh Start',        desc: 'First prestige',              icon: '\u267B\uFE0F', check: s => s.totalPrestiges >= 1 },
 ];
 
 // ===== GAME STATE =====
 let state = getDefaultState();
+let shopDirty = true; // flag to rebuild shop only when needed
 
 function getDefaultState() {
   return {
@@ -70,10 +71,12 @@ function getDefaultState() {
 
 // ===== NUMBER FORMATTING =====
 function formatNum(n) {
-  if (n < 1000) return Math.floor(n).toLocaleString('de-DE');
+  if (n < 0) return '-' + formatNum(-n);
+  if (n < 1) return n === 0 ? '0' : n.toFixed(1);
+  if (n < 1000) return Math.floor(n).toLocaleString('en-US');
   const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx'];
   const tier = Math.floor(Math.log10(Math.abs(n)) / 3);
-  if (tier === 0) return Math.floor(n).toLocaleString('de-DE');
+  if (tier === 0) return Math.floor(n).toLocaleString('en-US');
   const suffix = suffixes[tier] || 'e' + (tier * 3);
   const scale = Math.pow(10, tier * 3);
   const scaled = n / scale;
@@ -85,9 +88,9 @@ function getBuildingPrice(building, count) {
   return Math.floor(building.basePrice * Math.pow(1.15, count));
 }
 
-function getBuildingCPS(building, count, state) {
-  const mult = state.buildingMultipliers[building.id] || 1;
-  return building.baseCps * count * mult * state.globalMultiplier * state.prestigeMultiplier;
+function getBuildingCPS(building, count, s) {
+  const mult = s.buildingMultipliers[building.id] || 1;
+  return building.baseCps * count * mult * s.globalMultiplier * s.prestigeMultiplier;
 }
 
 function getCPS(s) {
@@ -112,7 +115,7 @@ function doClick(e) {
   spawnClickParticle(e, earned);
   animateCoin();
   checkAchievements();
-  updateUI();
+  shopDirty = true;
 }
 
 // ===== BUY BUILDING =====
@@ -124,7 +127,7 @@ function buyBuilding(id) {
     state.coins -= price;
     state.buildings[id] = count + 1;
     checkAchievements();
-    updateUI();
+    shopDirty = true;
     playBuySound();
   }
 }
@@ -145,7 +148,7 @@ function buyUpgrade(id) {
   }
 
   checkAchievements();
-  updateUI();
+  shopDirty = true;
   playBuySound();
 }
 
@@ -166,9 +169,8 @@ function doPrestige() {
   state.buildingMultipliers = {};
   state.upgrades = [];
   state.globalMultiplier = 1;
-  // totalCoins, totalClicks, achievements persist
   checkAchievements();
-  updateUI();
+  shopDirty = true;
 }
 
 // ===== ACHIEVEMENTS =====
@@ -184,7 +186,7 @@ function checkAchievements() {
 function showAchievementPopup(achievement) {
   const popup = document.createElement('div');
   popup.className = 'achievement-popup';
-  popup.innerHTML = `<span>${achievement.icon}</span> <b>${achievement.name}</b> freigeschaltet!`;
+  popup.innerHTML = `<span>${achievement.icon}</span> <b>${achievement.name}</b> unlocked!`;
   document.body.appendChild(popup);
   setTimeout(() => popup.classList.add('show'), 10);
   setTimeout(() => { popup.classList.remove('show'); setTimeout(() => popup.remove(), 300); }, 3000);
@@ -260,15 +262,14 @@ function loadGame() {
   try {
     const saved = JSON.parse(raw);
     state = { ...getDefaultState(), ...saved };
-    // Calculate offline earnings
     const elapsed = (Date.now() - state.lastSave) / 1000;
     if (elapsed > 5) {
-      const offlineEarnings = getCPS(state) * Math.min(elapsed, 86400); // max 24h
+      const offlineEarnings = getCPS(state) * Math.min(elapsed, 86400);
       if (offlineEarnings > 0) {
         state.coins += offlineEarnings;
         state.totalCoins += offlineEarnings;
         setTimeout(() => {
-          showAchievementPopup({ icon: '💤', name: 'Offline-Verdienst: ' + formatNum(offlineEarnings) + ' Coins' });
+          showAchievementPopup({ icon: '\u{1F4A4}', name: 'Offline earnings: ' + formatNum(offlineEarnings) + ' coins' });
         }, 500);
       }
     }
@@ -280,39 +281,42 @@ function exportSave() {
   saveGame();
   const data = btoa(localStorage.getItem(SAVE_KEY));
   navigator.clipboard.writeText(data).then(() => {
-    showAchievementPopup({ icon: '📋', name: 'Savegame kopiert!' });
+    showAchievementPopup({ icon: '\u{1F4CB}', name: 'Save copied!' });
   });
 }
 
 function importSave() {
-  const data = prompt('Savegame-Code einfügen:');
+  const data = prompt('Paste save code:');
   if (!data) return;
   try {
     const json = atob(data);
-    JSON.parse(json); // validate
+    JSON.parse(json);
     localStorage.setItem(SAVE_KEY, json);
     loadGame();
-    updateUI();
-    showAchievementPopup({ icon: '✅', name: 'Savegame geladen!' });
+    shopDirty = true;
+    showAchievementPopup({ icon: '\u2705', name: 'Save loaded!' });
   } catch (e) {
-    alert('Ungültiger Savegame-Code!');
+    alert('Invalid save code!');
   }
 }
 
 function resetGame() {
-  if (!confirm('Wirklich ALLES zurücksetzen? Das kann nicht rückgängig gemacht werden!')) return;
+  if (!confirm('Really reset EVERYTHING? This cannot be undone!')) return;
   localStorage.removeItem(SAVE_KEY);
   state = getDefaultState();
-  updateUI();
+  shopDirty = true;
 }
 
-// ===== UI =====
-function updateUI() {
+// ===== UI: COUNTERS (runs every frame) =====
+function updateCounters() {
   const cps = getCPS(state);
   document.getElementById('coinCount').textContent = formatNum(state.coins);
-  document.getElementById('cpsCount').textContent = formatNum(cps) + '/Sek';
-  document.getElementById('cpcCount').textContent = formatNum(getEffectiveCPC(state)) + '/Klick';
+  document.getElementById('cpsCount').textContent = formatNum(cps) + '/sec';
+  document.getElementById('cpcCount').textContent = formatNum(getEffectiveCPC(state)) + '/click';
+}
 
+// ===== UI: SHOP (runs only when shopDirty) =====
+function updateShop() {
   // Buildings
   const buildList = document.getElementById('buildingList');
   buildList.innerHTML = '';
@@ -350,7 +354,7 @@ function updateUI() {
     el.className = 'shop-item upgrade-item' + (canBuy ? '' : ' locked');
     el.innerHTML = `
       <div class="shop-item-left">
-        <span class="shop-icon">⬆️</span>
+        <span class="shop-icon">\u2B06\uFE0F</span>
         <div>
           <div class="shop-name">${u.name}</div>
           <div class="shop-desc">${u.desc}</div>
@@ -362,7 +366,7 @@ function updateUI() {
     upgradeList.appendChild(el);
   }
   if (!hasUpgrades) {
-    upgradeList.innerHTML = '<p class="shop-empty">Alle Upgrades gekauft!</p>';
+    upgradeList.innerHTML = '<p class="shop-empty">All upgrades purchased!</p>';
   }
 
   // Achievements
@@ -373,7 +377,7 @@ function updateUI() {
     const el = document.createElement('div');
     el.className = 'ach-badge' + (unlocked ? ' unlocked' : '');
     el.title = unlocked ? a.name + ': ' + a.desc : '???';
-    el.textContent = unlocked ? a.icon : '🔒';
+    el.textContent = unlocked ? a.icon : '\u{1F512}';
     achList.appendChild(el);
   }
 
@@ -382,12 +386,12 @@ function updateUI() {
   const prestigeBtn = document.getElementById('prestigeBtn');
   if (prestigeBonus > 0) {
     prestigeBtn.style.display = 'block';
-    prestigeBtn.textContent = `♻️ Prestige (+${prestigeBonus}x Multiplikator)`;
+    prestigeBtn.textContent = '\u267B\uFE0F Prestige (+' + prestigeBonus + 'x multiplier)';
   } else {
     prestigeBtn.style.display = 'none';
   }
   document.getElementById('prestigeInfo').textContent =
-    state.prestigeMultiplier > 1 ? `Prestige: x${state.prestigeMultiplier}` : '';
+    state.prestigeMultiplier > 1 ? 'Prestige: x' + state.prestigeMultiplier : '';
 }
 
 // ===== TABS =====
@@ -399,6 +403,7 @@ function switchTab(tab) {
 
 // ===== GAME LOOP =====
 let lastTick = performance.now();
+let lastShopUpdate = 0;
 
 function gameLoop(now) {
   const dt = (now - lastTick) / 1000;
@@ -410,7 +415,16 @@ function gameLoop(now) {
     state.totalCoins += earned;
   }
 
-  updateUI();
+  // Counters update every frame (cheap - just text changes)
+  updateCounters();
+
+  // Shop rebuilds only when dirty OR every 500ms (to update affordable state)
+  if (shopDirty || now - lastShopUpdate > 500) {
+    updateShop();
+    shopDirty = false;
+    lastShopUpdate = now;
+  }
+
   checkAchievements();
   requestAnimationFrame(gameLoop);
 }
@@ -433,7 +447,7 @@ function init() {
   document.getElementById('prestigeBtn').addEventListener('click', doPrestige);
 
   // Save buttons
-  document.getElementById('saveBtn').addEventListener('click', () => { saveGame(); showAchievementPopup({ icon: '💾', name: 'Gespeichert!' }); });
+  document.getElementById('saveBtn').addEventListener('click', () => { saveGame(); showAchievementPopup({ icon: '\u{1F4BE}', name: 'Saved!' }); });
   document.getElementById('exportBtn').addEventListener('click', exportSave);
   document.getElementById('importBtn').addEventListener('click', importSave);
   document.getElementById('resetBtn').addEventListener('click', resetGame);
@@ -441,7 +455,9 @@ function init() {
   // Auto-save every 30s
   setInterval(saveGame, 30000);
 
-  updateUI();
+  shopDirty = true;
+  updateCounters();
+  updateShop();
   requestAnimationFrame(gameLoop);
 }
 
