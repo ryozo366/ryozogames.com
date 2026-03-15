@@ -1,176 +1,156 @@
-// ===== RyozoGames Auth + Cloud Save System =====
-// Uses Supabase for authentication and cloud saves
-// Falls back to localStorage-only when Supabase is not configured
+// ===== RyozoGames Auth System =====
+// Pure localStorage - no external services needed
+// Accounts + game saves stored locally per user
 
 (function() {
 'use strict';
 
-// ===== CONFIG =====
-// IMPORTANT: Replace these with your Supabase project credentials
-const SUPABASE_URL = '';  // e.g. 'https://xxxxx.supabase.co'
-const SUPABASE_ANON_KEY = ''; // your anon/public key
+const ACCOUNTS_KEY = 'ryozogames_accounts';
+const SESSION_KEY = 'ryozogames_session';
 
-let supabase = null;
 let currentUser = null;
-let authReady = false;
 
-// ===== INIT =====
-function initAuth() {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    console.log('[Auth] No Supabase config - running in offline mode');
-    authReady = true;
-    return;
-  }
+// ===== PASSWORD HASHING (SHA-256) =====
+async function hashPassword(password, salt) {
+  const data = new TextEncoder().encode(salt + ':' + password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
-  if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
-    console.warn('[Auth] Supabase JS not loaded');
-    authReady = true;
-    return;
-  }
+function generateSalt() {
+  const arr = new Uint8Array(16);
+  crypto.getRandomValues(arr);
+  return Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  renderAuthUI();
+// ===== ACCOUNT STORAGE =====
+function getAccounts() {
+  try { return JSON.parse(localStorage.getItem(ACCOUNTS_KEY)) || {}; }
+  catch { return {}; }
+}
 
-  // Check existing session
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    if (session) {
-      onLogin(session.user);
-    }
-    authReady = true;
-  });
-
-  // Listen for auth changes
-  supabase.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_IN' && session) {
-      onLogin(session.user);
-    } else if (event === 'SIGNED_OUT') {
-      onLogout();
-    }
-  });
+function saveAccounts(accounts) {
+  localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
 }
 
 // ===== AUTH ACTIONS =====
 async function register(username, password) {
-  if (!supabase) return { error: 'Not configured' };
   username = username.trim().toLowerCase();
 
   if (username.length < 3) return { error: 'Username must be at least 3 characters' };
   if (username.length > 20) return { error: 'Username must be 20 characters or less' };
-  if (!/^[a-z0-9_]+$/.test(username)) return { error: 'Username: only letters, numbers, underscore' };
+  if (!/^[a-z0-9_]+$/.test(username)) return { error: 'Only letters, numbers, underscore allowed' };
   if (password.length < 6) return { error: 'Password must be at least 6 characters' };
 
-  const email = username + '@ryozogames.local';
+  const accounts = getAccounts();
+  if (accounts[username]) return { error: 'Username already taken' };
 
-  const { data, error } = await supabase.auth.signUp({
-    email: email,
-    password: password,
-    options: { data: { username: username } }
-  });
+  const salt = generateSalt();
+  const hash = await hashPassword(password, salt);
 
-  if (error) {
-    if (error.message.includes('already registered')) {
-      return { error: 'Username already taken' };
-    }
-    return { error: error.message };
-  }
+  accounts[username] = {
+    salt: salt,
+    hash: hash,
+    createdAt: Date.now(),
+  };
+  saveAccounts(accounts);
 
-  // Create profile
-  if (data.user) {
-    await supabase.from('profiles').upsert({
-      id: data.user.id,
-      username: username,
-    });
-  }
-
-  return { data };
+  // Auto-login after register
+  setSession(username);
+  onLogin(username);
+  return { ok: true };
 }
 
 async function login(username, password) {
-  if (!supabase) return { error: 'Not configured' };
   username = username.trim().toLowerCase();
-  const email = username + '@ryozogames.local';
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: email,
-    password: password,
-  });
+  const accounts = getAccounts();
+  const account = accounts[username];
+  if (!account) return { error: 'Wrong username or password' };
 
-  if (error) {
-    if (error.message.includes('Invalid login')) {
-      return { error: 'Wrong username or password' };
-    }
-    return { error: error.message };
-  }
+  const hash = await hashPassword(password, account.salt);
+  if (hash !== account.hash) return { error: 'Wrong username or password' };
 
-  return { data };
+  setSession(username);
+  onLogin(username);
+  return { ok: true };
 }
 
-async function logout() {
-  if (!supabase) return;
-  await supabase.auth.signOut();
-}
-
-function onLogin(user) {
-  const username = user.user_metadata?.username || user.email?.split('@')[0] || 'User';
-  currentUser = { id: user.id, username: username };
-  updateAuthDisplay();
-  // Load cloud saves
-  loadAllCloudSaves();
-}
-
-function onLogout() {
+function logout() {
+  localStorage.removeItem(SESSION_KEY);
   currentUser = null;
   updateAuthDisplay();
+  // Reload page to reset game state to default/anonymous
+  location.reload();
 }
 
-// ===== CLOUD SAVES =====
-async function saveToCloud(gameId, saveData) {
-  if (!supabase || !currentUser) return;
-  try {
-    await supabase.from('game_saves').upsert({
-      user_id: currentUser.id,
-      game_id: gameId,
-      save_data: saveData,
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'user_id,game_id' });
-  } catch (e) {
-    console.warn('[Auth] Cloud save failed:', e);
+function setSession(username) {
+  localStorage.setItem(SESSION_KEY, username);
+}
+
+function getSession() {
+  return localStorage.getItem(SESSION_KEY) || null;
+}
+
+// ===== LOGIN / LOGOUT HANDLERS =====
+function onLogin(username) {
+  currentUser = username;
+  updateAuthDisplay();
+  loadUserSaves();
+}
+
+// ===== GAME SAVE SYSTEM =====
+// When logged in: saves go to user-specific keys
+// When not logged in: saves go to default keys (backwards compatible)
+
+function getSaveKey(gameId) {
+  if (currentUser) {
+    return 'ryozogames_' + currentUser + '_' + gameId;
+  }
+  // Default keys for anonymous play (backwards compatible)
+  if (gameId === 'ryozoclicker') return 'ryozoclicker_save';
+  if (gameId === 'ryozodash_easy') return 'ryozodash_best_easy';
+  if (gameId === 'ryozodash_normal') return 'ryozodash_best_normal';
+  if (gameId === 'ryozodash_hard') return 'ryozodash_best_hard';
+  return 'ryozogames_anon_' + gameId;
+}
+
+function saveGameData(gameId, data) {
+  const key = getSaveKey(gameId);
+  if (typeof data === 'object') {
+    localStorage.setItem(key, JSON.stringify(data));
+  } else {
+    localStorage.setItem(key, String(data));
   }
 }
 
-async function loadFromCloud(gameId) {
-  if (!supabase || !currentUser) return null;
-  try {
-    const { data, error } = await supabase
-      .from('game_saves')
-      .select('save_data')
-      .eq('user_id', currentUser.id)
-      .eq('game_id', gameId)
-      .single();
-    if (error || !data) return null;
-    return data.save_data;
-  } catch (e) {
-    return null;
-  }
+function loadGameData(gameId) {
+  const key = getSaveKey(gameId);
+  const raw = localStorage.getItem(key);
+  if (!raw) return null;
+  try { return JSON.parse(raw); }
+  catch { return raw; }
 }
 
-async function loadAllCloudSaves() {
-  // Load RyozoClicker save
-  const clickerSave = await loadFromCloud('ryozoclicker');
-  if (clickerSave && window.loadClickerFromCloud) {
-    window.loadClickerFromCloud(clickerSave);
+function loadUserSaves() {
+  // Tell RyozoClicker to reload from user save
+  if (window.loadClickerFromCloud) {
+    const save = loadGameData('ryozoclicker');
+    if (save) window.loadClickerFromCloud(save);
   }
-
-  // Load RyozoDash saves
-  const dashSave = await loadFromCloud('ryozodash');
-  if (dashSave && window.loadDashFromCloud) {
-    window.loadDashFromCloud(dashSave);
+  // Tell RyozoDash to reload scores
+  if (window.loadDashFromCloud) {
+    window.loadDashFromCloud({
+      easy: loadGameData('ryozodash_easy'),
+      normal: loadGameData('ryozodash_normal'),
+      hard: loadGameData('ryozodash_hard'),
+    });
   }
 }
 
 // ===== UI =====
 function renderAuthUI() {
-  // Add login button or username to nav
   const nav = document.querySelector('.nav-links');
   if (!nav) return;
 
@@ -188,7 +168,7 @@ function renderAuthUI() {
     }
   });
 
-  // Create modal
+  // Modal
   const modal = document.createElement('div');
   modal.id = 'authModal';
   modal.className = 'auth-modal';
@@ -212,12 +192,11 @@ function renderAuthUI() {
         <p class="auth-error" id="authError"></p>
         <button type="submit" class="auth-submit" id="authSubmit">Login</button>
       </form>
-      <p class="auth-info">Your game saves will be synced to the cloud.</p>
+      <p class="auth-info">Your game saves are stored locally per account.</p>
     </div>
   `;
   document.body.appendChild(modal);
 
-  // Event listeners
   let authMode = 'login';
 
   document.getElementById('authClose').addEventListener('click', hideAuthModal);
@@ -243,12 +222,9 @@ function renderAuthUI() {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Loading...';
 
-    let result;
-    if (authMode === 'login') {
-      result = await login(username, password);
-    } else {
-      result = await register(username, password);
-    }
+    const result = authMode === 'login'
+      ? await login(username, password)
+      : await register(username, password);
 
     submitBtn.disabled = false;
     submitBtn.textContent = authMode === 'login' ? 'Login' : 'Register';
@@ -277,7 +253,7 @@ function updateAuthDisplay() {
   const btn = document.getElementById('authNavBtn');
   if (!btn) return;
   if (currentUser) {
-    btn.textContent = currentUser.username;
+    btn.textContent = currentUser;
     btn.classList.add('logged-in');
   } else {
     btn.textContent = 'Login';
@@ -286,24 +262,38 @@ function updateAuthDisplay() {
 }
 
 function showUserMenu() {
-  if (confirm('Logged in as ' + currentUser.username + '\n\nLog out?')) {
+  if (confirm('Logged in as: ' + currentUser + '\n\nLog out?')) {
     logout();
   }
 }
 
 // ===== EXPOSE API =====
 window.RyozoAuth = {
-  saveToCloud: saveToCloud,
-  loadFromCloud: loadFromCloud,
+  saveGameData: saveGameData,
+  loadGameData: loadGameData,
   getUser: () => currentUser,
-  isReady: () => authReady,
+  getSaveKey: getSaveKey,
 };
 
-// ===== INIT ON DOM READY =====
+// ===== INIT =====
+function init() {
+  renderAuthUI();
+  // Restore session
+  const session = getSession();
+  if (session) {
+    const accounts = getAccounts();
+    if (accounts[session]) {
+      onLogin(session);
+    } else {
+      localStorage.removeItem(SESSION_KEY);
+    }
+  }
+}
+
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initAuth);
+  document.addEventListener('DOMContentLoaded', init);
 } else {
-  initAuth();
+  init();
 }
 
 })();

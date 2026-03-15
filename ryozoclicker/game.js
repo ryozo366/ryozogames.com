@@ -290,33 +290,48 @@ const SAVE_KEY = 'ryozoclicker_save';
 
 function saveGame() {
   state.lastSave = Date.now();
-  const data = JSON.stringify(state);
-  localStorage.setItem(SAVE_KEY, data);
-  // Cloud save if logged in
-  if (window.RyozoAuth && window.RyozoAuth.saveToCloud) {
-    window.RyozoAuth.saveToCloud('ryozoclicker', state);
+  // Use auth system if available, otherwise direct localStorage
+  if (window.RyozoAuth && window.RyozoAuth.saveGameData) {
+    window.RyozoAuth.saveGameData('ryozoclicker', state);
+  } else {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
   }
 }
 
 function loadGame() {
-  const raw = localStorage.getItem(SAVE_KEY);
+  let raw;
+  if (window.RyozoAuth && window.RyozoAuth.loadGameData) {
+    raw = window.RyozoAuth.loadGameData('ryozoclicker');
+    // loadGameData returns parsed object or null
+    if (raw && typeof raw === 'object') {
+      state = { ...getDefaultState(), ...raw };
+      applyOfflineEarnings();
+      return true;
+    }
+  }
+  // Fallback to direct localStorage
+  raw = localStorage.getItem(SAVE_KEY);
   if (!raw) return false;
   try {
     const saved = JSON.parse(raw);
     state = { ...getDefaultState(), ...saved };
-    const elapsed = (Date.now() - state.lastSave) / 1000;
-    if (elapsed > 5) {
-      const offlineEarnings = getCPS(state) * Math.min(elapsed, 86400);
-      if (offlineEarnings > 0) {
-        state.coins += offlineEarnings;
-        state.totalCoins += offlineEarnings;
-        setTimeout(() => {
-          showAchievementPopup({ icon: '\u{1F4A4}', name: 'Offline: +' + formatNum(offlineEarnings) + ' coins' });
-        }, 500);
-      }
-    }
+    applyOfflineEarnings();
     return true;
   } catch (e) { return false; }
+}
+
+function applyOfflineEarnings() {
+  const elapsed = (Date.now() - state.lastSave) / 1000;
+  if (elapsed > 5) {
+    const offlineEarnings = getCPS(state) * Math.min(elapsed, 86400);
+    if (offlineEarnings > 0) {
+      state.coins += offlineEarnings;
+      state.totalCoins += offlineEarnings;
+      setTimeout(() => {
+        showAchievementPopup({ icon: '\u{1F4A4}', name: 'Offline: +' + formatNum(offlineEarnings) + ' coins' });
+      }, 500);
+    }
+  }
 }
 
 // Called by auth system when cloud save is loaded
