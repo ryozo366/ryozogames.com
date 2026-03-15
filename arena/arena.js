@@ -1,7 +1,10 @@
 (function() {
 'use strict';
 
-const SERVER_URL = 'https://ryozogames-server.onrender.com';
+// Use local server for dev (Live Server on port 5500), production otherwise
+const SERVER_URL = location.hostname === '127.0.0.1' || location.hostname === 'localhost'
+  ? 'http://localhost:3001'
+  : 'https://ryozogames-server.onrender.com';
 
 let socket = null;
 let roomCode = null;
@@ -143,6 +146,11 @@ function handleRoomUpdate(data) {
     const oppName = isHost ? (data.guest ? data.guest.username : 'Opponent') : (data.host ? data.host.username : 'Opponent');
     document.getElementById('hudP1Name').textContent = selfName;
     document.getElementById('hudP2Name').textContent = oppName;
+
+    // Start game client if not already running
+    if (data.game && !currentGame) {
+      startGameClient(data.game);
+    }
   }
 }
 
@@ -150,14 +158,25 @@ function handleCountdown(data) {
   const overlay = document.getElementById('countdownOverlay');
   const num = document.getElementById('countdownNum');
   overlay.style.display = '';
-  num.textContent = data.count;
-  // Retrigger animation
-  num.style.animation = 'none';
-  num.offsetHeight; // force reflow
-  num.style.animation = '';
 
   if (data.count <= 0) {
-    overlay.style.display = 'none';
+    num.textContent = 'GO!';
+    num.style.color = 'var(--accent-green)';
+    // Retrigger animation
+    num.style.animation = 'none';
+    num.offsetHeight;
+    num.style.animation = '';
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      num.style.color = '';
+    }, 600);
+  } else {
+    num.textContent = data.count;
+    num.style.color = '';
+    // Retrigger animation
+    num.style.animation = 'none';
+    num.offsetHeight;
+    num.style.animation = '';
   }
 }
 
@@ -260,14 +279,6 @@ function startGameClient(gameId) {
   });
 }
 
-// Watch for game_starting (from countdown → game)
-// The game screen shows when room_update state=playing, game starts after countdown
-socket && socket.on('room_update', (data) => {
-  if (data.state === 'playing' && data.game && !currentGame) {
-    startGameClient(data.game);
-  }
-});
-
 // ===== BUTTON HANDLERS =====
 document.getElementById('createRoomBtn').addEventListener('click', () => {
   if (!socket || !socket.connected) return showToast('Not connected to server yet.');
@@ -354,14 +365,5 @@ window.ArenaGames = window.ArenaGames || {};
 document.getElementById('createRoomBtn').disabled = true;
 document.getElementById('joinRoomBtn').disabled = true;
 connect();
-
-// Re-add listener that needs socket (after connect)
-// The room_update → startGameClient bridge
-const origRoomUpdate = handleRoomUpdate;
-socket.on('room_update', (data) => {
-  if (data.state === 'playing' && data.game && !currentGame) {
-    startGameClient(data.game);
-  }
-});
 
 })();

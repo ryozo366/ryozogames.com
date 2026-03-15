@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -877,6 +877,54 @@
     position:absolute; border:2px dashed rgba(231,76,60,0.5); border-radius:50%;
     pointer-events:none; z-index:5;
   }
+
+  /* ===== MOBILE TOUCH CONTROLS ===== */
+  #mobile-controls {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    z-index: 50;
+    pointer-events: auto;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+  }
+  .dpad {
+    display: grid;
+    grid-template-columns: 52px 52px 52px;
+    grid-template-rows: 52px 52px 52px;
+    gap: 4px;
+  }
+  .dpad-btn {
+    width: 52px;
+    height: 52px;
+    border: none;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.08s, transform 0.08s;
+    pointer-events: auto;
+    touch-action: none;
+  }
+  .dpad-btn:active, .dpad-btn.pressed {
+    background: rgba(232,120,58,0.7);
+    transform: scale(0.92);
+  }
+  .dpad-empty { visibility: hidden; }
+  @media (hover: hover) and (pointer: fine) {
+    #mobile-controls { display: none !important; }
+  }
+  @media (hover: none) and (pointer: coarse) {
+    #mobile-controls { display: block; }
+  }
 </style>
 </head>
 <body>
@@ -885,7 +933,7 @@
 <noscript>
 <div style="padding:40px;max-width:800px;margin:0 auto;font-family:sans-serif;">
 <h1>Snake 3D - Free Online 3D Snake Game</h1>
-<p>Play Snake 3D for free in your browser at ryozogames.com! Guide your snake across beautiful 3D maps, collect fruits, earn coins, and unlock upgrades.</p>
+<p>Play Snake 3D for free in your browser at snake3d.online! Guide your snake across beautiful 3D maps, collect fruits, earn coins, and unlock upgrades.</p>
 <h2>Game Features</h2>
 <ul>
 <li><strong>4 Unique Maps:</strong> Classic Meadow, Frozen Tundra, Jungle Ruins, and Desert Sands</li>
@@ -906,7 +954,7 @@
 <!-- Profile Bar -->
 <div id="profile-bar">
   <span class="hud-pill" id="profile-pill">👤 Guest</span>
-  <span class="hud-pill" id="login-btn" style="cursor:pointer;background:linear-gradient(135deg,rgba(249,202,36,0.9),rgba(232,120,58,0.9));color:#fff;font-weight:700;">🔑 Log in to save</span>
+  <span class="hud-pill" id="login-btn" style="display:none;">🔑 Log in to save</span>
   <span class="hud-pill" id="logout-btn" style="display:none;">🚪</span>
 </div>
 
@@ -945,7 +993,7 @@
   <div id="speedrun-hud" style="display:none;margin-top:4px;">
     <span class="hud-pill" id="speedrun-timer" style="font-size:16px;padding:4px 16px;background:rgba(255,80,80,0.9);color:#fff;border-color:rgba(255,120,120,0.9);">⏱️ 60s</span>
   </div>
-  <div id="message">Press any arrow key to start</div>
+  <div id="message">Tap or press arrow keys to start</div>
   <div id="cheat-bar" style="margin-top:8px;pointer-events:auto;">
     <input type="text" id="cheat-input" placeholder="Enter code..." spellcheck="false" autocomplete="off"
       style="font-family:'Baloo 2',sans-serif;font-size:14px;font-weight:700;padding:5px 14px;border-radius:16px;border:2px solid rgba(255,255,255,0.8);background:rgba(255,255,255,0.75);color:#5a3a1a;outline:none;width:160px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.1);">
@@ -1025,7 +1073,7 @@
 </div>
 
 <!-- Login -->
-<div id="login-overlay">
+<div id="login-overlay" style="display:none !important;"
   <div id="login-panel">
     <h2>SNAKE 3D</h2>
     <div class="login-subtitle">Save your progress across sessions!</div>
@@ -1283,8 +1331,8 @@ function doLogout() {
   dailyChallengeData = { ...getDefaultSaveData('').dailyChallenges };
   tutorialDone = false;
   profilePill.textContent = '👤 Guest';
-  // Show login button, hide logout
-  document.getElementById('login-btn').style.display = '';
+  // On ryozogames.com, login is handled by auth.js - keep login-btn hidden
+  document.getElementById('login-btn').style.display = 'none';
   document.getElementById('logout-btn').style.display = 'none';
 }
 
@@ -1563,15 +1611,18 @@ scene.background = new THREE.Color(0x87CEEB);
 scene.fog = new THREE.Fog(0x87CEEB, 50, 100);
 
 const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 200);
-camera.position.set(0, 16, 14);
+camera.position.set(0, 20, 14);
 
 const orbitControls = new OrbitControls(camera, renderer.domElement);
 orbitControls.target.set(0, 0, 0);
 orbitControls.enableDamping = true;
 orbitControls.dampingFactor = 0.08;
-orbitControls.maxPolarAngle = Math.PI / 2.1;
-orbitControls.minDistance = 10;
-orbitControls.maxDistance = 45;
+orbitControls.minPolarAngle = Math.PI / 6;
+orbitControls.maxPolarAngle = Math.PI / 2.3;
+orbitControls.minAzimuthAngle = -Math.PI / 4;
+orbitControls.maxAzimuthAngle = Math.PI / 4;
+orbitControls.minDistance = 12;
+orbitControls.maxDistance = 40;
 orbitControls.update();
 
 // ===== LIGHTING =====
@@ -2405,7 +2456,7 @@ function init() {
   // Restore banner text
   document.querySelector('.go-banner').textContent = 'GAME OVER';
   updateHUD();
-  msgEl.textContent = 'Press any arrow key to start';
+  msgEl.textContent = 'Tap or press arrow keys to start';
   gameoverOverlay.classList.remove('visible');
   // Show menu UI again
   document.getElementById('map-badge').style.display = '';
@@ -2413,7 +2464,7 @@ function init() {
   document.getElementById('mode-selector').style.display = '';
   document.getElementById('cube-back-bar').style.display = 'none';
   // Reset camera for classic
-  camera.position.set(0, 16, 14);
+  camera.position.set(0, 20, 14);
   camera.up.set(0, 1, 0);
   orbitControls.maxDistance = 45;
   const sc2 = dirLight.shadow.camera;
@@ -2621,13 +2672,34 @@ function gameTick() {
   }
   // Magnet: move ALL nearby food toward player (within 5 cells)
   if (isPowerupActive('magnet')) {
-    for (const cf of classicFoods) {
+    for (let mi = classicFoods.length - 1; mi >= 0; mi--) {
+      const cf = classicFoods[mi];
       const dist = Math.abs(cf.x - head.x) + Math.abs(cf.y - head.y);
       if (dist <= 5) {
         if (cf.x < head.x) cf.x++; else if (cf.x > head.x) cf.x--;
         if (cf.y < head.y) cf.y++; else if (cf.y > head.y) cf.y--;
         // Update mesh position
         if (cf.mesh) { const wp = gridToWorld(cf.x, cf.y); cf.mesh.position.set(wp.x, CELL * 0.4, wp.z); }
+        // Eat food that landed on head after magnet pull
+        if (cf.x === head.x && cf.y === head.y) {
+          const ft = cf.type;
+          const coinMult = isPowerupActive('double') ? 2 : 1;
+          const cg = (ft.coins + getCoinBonus()) * coinMult, sg = Math.round(ft.score * getScoreMult());
+          score += sg; runCoins += cg; runFoodCounts[ft.name]++; runFoodTotal++;
+          if (ft.name === 'Mango') sessionProgress.mangosEaten++;
+          sessionProgress.fruitsEaten++;
+          sessionProgress.score = score;
+          sessionProgress.coinsEarned = runCoins;
+          runMaxLength = Math.max(runMaxLength, snake.length);
+          sessionProgress.length = runMaxLength;
+          playSound('eat');
+          spawnFloatingText(`🧲 ${ft.emoji} +${sg}  🪙${cg}`, '#fff', gridToWorld(head.x, head.y));
+          if (cf.mesh) scene.remove(cf.mesh);
+          classicFoods.splice(mi, 1);
+          placeFood();
+          snake.push({ ...snake[snake.length - 1] });
+          prevSnake.push({ ...prevSnake[prevSnake.length - 1] });
+        }
       }
     }
   }
@@ -3507,9 +3579,54 @@ function botDecide(bot) {
   return bestDir;
 }
 
+// ===== DEATH PARTICLE SYSTEM =====
+const deathParticles = [];
+const particleGeo = new THREE.BoxGeometry(0.25, 0.25, 0.25);
+
+function spawnDeathParticles(worldX, worldZ, color) {
+  const count = 12 + Math.floor(Math.random() * 8);
+  for (let i = 0; i < count; i++) {
+    const mat = new THREE.MeshStandardMaterial({ color: color.clone(), emissive: color.clone(), emissiveIntensity: 0.4, transparent: true, opacity: 1 });
+    const mesh = new THREE.Mesh(particleGeo, mat);
+    mesh.position.set(worldX + (Math.random() - 0.5) * 0.5, 0.4, worldZ + (Math.random() - 0.5) * 0.5);
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 2 + Math.random() * 4;
+    scene.add(mesh);
+    deathParticles.push({
+      mesh, life: 1,
+      vx: Math.cos(angle) * speed,
+      vy: 3 + Math.random() * 5,
+      vz: Math.sin(angle) * speed
+    });
+  }
+}
+
+function updateDeathParticles(dt) {
+  for (let i = deathParticles.length - 1; i >= 0; i--) {
+    const p = deathParticles[i];
+    p.life -= dt * 1.5;
+    p.vy -= 15 * dt; // gravity
+    p.mesh.position.x += p.vx * dt;
+    p.mesh.position.y += p.vy * dt;
+    p.mesh.position.z += p.vz * dt;
+    p.mesh.rotation.x += dt * 8;
+    p.mesh.rotation.z += dt * 6;
+    p.mesh.material.opacity = Math.max(0, p.life);
+    p.mesh.scale.setScalar(Math.max(0.1, p.life));
+    if (p.life <= 0) {
+      scene.remove(p.mesh);
+      p.mesh.material.dispose();
+      deathParticles.splice(i, 1);
+    }
+  }
+}
+
 function killBot(bot, killerName) {
   bot.alive = false;
   royaleAlive--;
+  // Spawn particles at head position
+  const headPos = gridToWorld(bot.snake[0].x, bot.snake[0].y);
+  spawnDeathParticles(headPos.x, headPos.z, bot.color);
   // Drop food along body
   for (let i = 0; i < bot.snake.length; i += 2) {
     const seg = bot.snake[i];
@@ -3589,7 +3706,7 @@ function initRoyale() {
   document.getElementById('alive-pill').textContent = `👥 ${royaleAlive} Alive`;
   document.getElementById('kills-pill').textContent = `💀 0 Kills`;
   updateHUD();
-  msgEl.textContent = 'Press any arrow key to start!';
+  msgEl.textContent = 'Tap or press arrow keys to start!';
   syncRoyaleScene();
 }
 
@@ -3828,6 +3945,19 @@ function royaleTick(now) {
     if (nf) {
       if (nf.x < head.x) nf.x++; else if (nf.x > head.x) nf.x--;
       if (nf.y < head.y) nf.y++; else if (nf.y > head.y) nf.y--;
+      // Eat food that landed on head after magnet pull
+      if (nf.x === head.x && nf.y === head.y) {
+        const ft = nf.type;
+        const coinMult = isPowerupActive('double') ? 2 : 1;
+        const cg = (ft.coins + getCoinBonus()) * coinMult;
+        const sg = Math.round(ft.score * getScoreMult());
+        score += sg; runCoins += cg; runFoodTotal++;
+        playSound('eat');
+        spawnFloatingText(`🧲 ${ft.emoji} +${sg}`, '#fff', gridToWorld(head.x, head.y));
+        royaleFoods.splice(royaleFoods.indexOf(nf), 1);
+        snake.push({ ...snake[snake.length - 1] });
+        prevSnake.push({ ...prevSnake[prevSnake.length - 1] });
+      }
     }
   }
   // Check if player killed a bot (head-on)
@@ -4189,7 +4319,7 @@ function initCube() {
   // UI
   document.querySelector('.go-banner').textContent = 'GAME OVER';
   updateHUD();
-  msgEl.textContent = 'Press any arrow key to start';
+  msgEl.textContent = 'Tap or press arrow keys to start';
   gameoverOverlay.classList.remove('visible');
   document.getElementById('map-badge').style.display = 'none';
   document.getElementById('cheat-bar').style.display = '';
@@ -4738,6 +4868,13 @@ function animate(now) {
     tickProgress = Math.min((now - lastTickTime) / speed, 1);
   }
 
+  // Update death particles
+  if (deathParticles.length > 0) {
+    const dt = Math.min((now - (animate._lastNow || now)) / 1000, 0.05);
+    updateDeathParticles(dt);
+  }
+  animate._lastNow = now;
+
   if (gameMode === 'royale' && royaleActive) {
     syncRoyaleScene();
   } else if (gameMode === 'cube' && cubeActive) {
@@ -4861,7 +4998,7 @@ function initEndless() {
   document.getElementById('cheat-bar').style.display = '';
   document.getElementById('mode-selector').style.display = '';
   document.getElementById('cube-back-bar').style.display = 'none';
-  camera.position.set(0, 16, 14); camera.up.set(0, 1, 0);
+  camera.position.set(0, 20, 14); camera.up.set(0, 1, 0);
   orbitControls.maxDistance = 45;
   const sc2 = dirLight.shadow.camera;
   sc2.left = -18; sc2.right = 18; sc2.top = 18; sc2.bottom = -18; sc2.updateProjectionMatrix();
@@ -4909,7 +5046,7 @@ function initSpeedrun() {
   document.getElementById('cheat-bar').style.display = '';
   document.getElementById('mode-selector').style.display = '';
   document.getElementById('cube-back-bar').style.display = 'none';
-  camera.position.set(0, 16, 14); camera.up.set(0, 1, 0);
+  camera.position.set(0, 20, 14); camera.up.set(0, 1, 0);
   orbitControls.maxDistance = 45;
   const sc2 = dirLight.shadow.camera;
   sc2.left = -18; sc2.right = 18; sc2.top = 18; sc2.bottom = -18; sc2.updateProjectionMatrix();
@@ -4978,9 +5115,9 @@ document.getElementById('daily-close').addEventListener('click', () => {
 
 // ===== SHARE SCORE =====
 document.getElementById('btn-share-score').addEventListener('click', () => {
-  const text = `🐍 Snake 3D — I scored ${score.toLocaleString()} points in ${gameMode} mode! Can you beat me?\n🎮 Play at ryozogames.com`;
+  const text = `🐍 Snake 3D — I scored ${score.toLocaleString()} points in ${gameMode} mode! Can you beat me?\n🎮 Play at snake3d.online`;
   if (navigator.share) {
-    navigator.share({ title: 'Snake 3D Score', text: text, url: 'https://ryozogames.com' }).catch(() => {});
+    navigator.share({ title: 'Snake 3D Score', text: text, url: 'https://snake3d.online' }).catch(() => {});
   } else {
     navigator.clipboard.writeText(text).then(() => {
       const btn = document.getElementById('btn-share-score');
@@ -5344,17 +5481,74 @@ function playArcadeLoop() {
       brSubmit.disabled = false;
     }
   });
+
+// ===== MOBILE TOUCH CONTROLS =====
+document.querySelectorAll('#mobile-controls .dpad-btn').forEach(btn => {
+  const key = btn.dataset.key;
+  function fireKey() {
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: key, bubbles: true }));
+  }
+  btn.addEventListener('touchstart', e => {
+    e.preventDefault();
+    btn.classList.add('pressed');
+    fireKey();
+  }, { passive: false });
+  btn.addEventListener('touchend', e => {
+    e.preventDefault();
+    btn.classList.remove('pressed');
+  }, { passive: false });
+  btn.addEventListener('mousedown', e => {
+    e.preventDefault();
+    btn.classList.add('pressed');
+    fireKey();
+  });
+  btn.addEventListener('mouseup', () => btn.classList.remove('pressed'));
+  btn.addEventListener('mouseleave', () => btn.classList.remove('pressed'));
+});
+
+// Hide d-pad when overlays are open, show when game is active
+const mobileControls = document.getElementById('mobile-controls');
+const hideMobileOnOverlay = new MutationObserver(() => {
+  const anyOverlayOpen = [gameoverOverlay, shopOverlay, mapShopOverlay, skinShopOverlay, coinShopOverlay, leaderboardOverlay, challengesOverlay, achievementsOverlay].some(
+    el => el && el.classList.contains('visible')
+  );
+  if (anyOverlayOpen) {
+    mobileControls.style.display = 'none';
+  } else {
+    // Restore based on media query
+    mobileControls.style.display = '';
+  }
+});
+[gameoverOverlay, shopOverlay, mapShopOverlay, skinShopOverlay, coinShopOverlay, leaderboardOverlay, challengesOverlay, achievementsOverlay].forEach(el => {
+  if (el) hideMobileOnOverlay.observe(el, { attributes: true, attributeFilter: ['class'] });
+});
+
 })();
 </script>
 
+<!-- Mobile D-Pad -->
+<div id="mobile-controls">
+  <div class="dpad">
+    <div class="dpad-empty"></div>
+    <button class="dpad-btn" data-key="ArrowUp">&#9650;</button>
+    <div class="dpad-empty"></div>
+    <button class="dpad-btn" data-key="ArrowLeft">&#9664;</button>
+    <div class="dpad-empty"></div>
+    <button class="dpad-btn" data-key="ArrowRight">&#9654;</button>
+    <div class="dpad-empty"></div>
+    <button class="dpad-btn" data-key="ArrowDown">&#9660;</button>
+    <div class="dpad-empty"></div>
+  </div>
+</div>
+
 <!-- Footer -->
 <div id="site-footer" style="position:fixed;bottom:0;left:0;right:auto;padding:6px 14px;font-size:10px;font-weight:700;color:rgba(90,58,26,0.5);z-index:5;pointer-events:auto;">
-  <a href="/" style="color:#e8783a;text-decoration:none;margin:0 4px;">RyozoGames</a> ·
-  <a href="/datenschutz/" style="color:#e8783a;text-decoration:none;margin:0 4px;">Privacy</a> ·
-  <a href="/about/" style="color:#e8783a;text-decoration:none;margin:0 4px;">About</a> ·
-  <a href="/impressum/" style="color:#e8783a;text-decoration:none;margin:0 4px;">Legal Notice</a> ·
-  <a href="/ryozoclicker/" style="color:#e8783a;text-decoration:none;margin:0 4px;">RyozoClicker</a> ·
-  <a href="/arena/" style="color:#e8783a;text-decoration:none;margin:0 4px;">Arena</a> ·
+  <a href="/" style="color:#e8783a;text-decoration:none;margin:0 4px;">RyozoGames</a> &middot;
+  <a href="/datenschutz/" style="color:#e8783a;text-decoration:none;margin:0 4px;">Privacy</a> &middot;
+  <a href="/about/" style="color:#e8783a;text-decoration:none;margin:0 4px;">About</a> &middot;
+  <a href="/impressum/" style="color:#e8783a;text-decoration:none;margin:0 4px;">Legal Notice</a> &middot;
+  <a href="/ryozoclicker/" style="color:#e8783a;text-decoration:none;margin:0 4px;">RyozoClicker</a> &middot;
+  <a href="/arena/" style="color:#e8783a;text-decoration:none;margin:0 4px;">Arena</a> &middot;
   &copy; 2026 RyozoGames
 </div>
 
