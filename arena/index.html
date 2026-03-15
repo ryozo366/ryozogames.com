@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Arena – 2-Player Multiplayer | RyozoGames</title>
+  <meta name="description" content="Play 2-player multiplayer mini-games with friends. Create a room, share the code, and compete in Pong, Air Hockey and more!">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ryozogames.com/arena/">
+
+  <meta property="og:type" content="game">
+  <meta property="og:title" content="Arena – 2-Player Multiplayer | RyozoGames">
+  <meta property="og:description" content="Play multiplayer mini-games with a friend. Pong, Air Hockey and more – all in your browser.">
+  <meta property="og:url" content="https://ryozogames.com/arena/">
+  <meta property="og:image" content="https://ryozogames.com/img/og-home.png">
+  <meta property="og:site_name" content="RyozoGames">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Arena – 2-Player Multiplayer | RyozoGames">
+  <meta name="twitter:description" content="Real-time multiplayer mini-games in your browser.">
+  <meta name="twitter:image" content="https://ryozogames.com/img/og-home.png">
+
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+  <meta name="theme-color" content="#09090b">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "RyozoGames Arena",
+    "description": "2-player multiplayer mini-game hub with Pong, Air Hockey and more.",
+    "url": "https://ryozogames.com/arena/",
+    "genre": ["Multiplayer", "Arcade"],
+    "gamePlatform": "Web Browser",
+    "operatingSystem": "Any",
+    "applicationCategory": "Game",
+    "numberOfPlayers": { "@type": "QuantitativeValue", "minValue": 2, "maxValue": 2 },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* ===== ARENA STYLES ===== */
+    .arena-screen {
+      min-height: calc(100vh - var(--nav-height));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+
+    .arena-hero { text-align: center; margin-bottom: 40px; }
+    .arena-hero h1 {
+      font-size: clamp(36px, 7vw, 56px);
+      font-weight: 900;
+      letter-spacing: -1.5px;
+    }
+    .arena-hero p {
+      color: var(--text-secondary);
+      margin-top: 12px;
+      font-size: 16px;
+    }
+
+    .arena-actions {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .arena-btn {
+      background: var(--text-primary);
+      color: var(--bg-primary);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 12px 32px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .arena-btn:hover { opacity: 0.9; transform: scale(1.02); }
+    .arena-btn:active { transform: scale(0.97); }
+
+    .arena-btn.secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .arena-btn.secondary:hover { border-color: var(--border-hover); color: var(--text-primary); }
+
+    .arena-divider {
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .join-form {
+      display: flex;
+      gap: 8px;
+    }
+
+    #roomCodeInput {
+      width: 130px;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      color: white;
+      font-size: 22px;
+      font-family: 'Inter', monospace;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #roomCodeInput:focus { border-color: var(--text-muted); }
+    #roomCodeInput::placeholder { color: var(--text-muted); font-size: 16px; letter-spacing: 3px; }
+
+    .connection-status {
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+    .status-dot.connected { background: var(--accent-green); }
+    .status-dot.connecting { background: #fbbf24; animation: blink 1s infinite; }
+    @keyframes blink { 50% { opacity: 0.3; } }
+
+    /* Room Screen */
+    .room-info { text-align: center; margin-bottom: 32px; }
+    .room-label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
+    .room-code {
+      font-size: clamp(48px, 10vw, 72px);
+      font-weight: 900;
+      letter-spacing: 12px;
+      color: var(--accent-cyan);
+    }
+    .copy-btn {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 6px 16px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .copy-btn:hover { border-color: var(--border-hover); color: var(--text-secondary); }
+
+    .room-players {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .player-slot {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 32px;
+      text-align: center;
+      min-width: 120px;
+    }
+    .player-name { font-weight: 700; font-size: 16px; }
+    .player-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+    .player-slot.waiting { border-style: dashed; }
+    .player-slot.waiting .player-name { color: var(--text-muted); }
+
+    .vs-text { font-size: 20px; font-weight: 900; color: var(--text-muted); }
+
+    /* Game Selection */
+    .game-select { text-align: center; margin-bottom: 32px; }
+    .game-select h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text-secondary); }
+    .game-options { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    .game-option {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      color: var(--text-primary);
+      min-width: 140px;
+    }
+    .game-option:hover {
+      border-color: var(--accent-cyan);
+      background: rgba(34, 211, 238, 0.04);
+    }
+    .game-option-icon { font-size: 40px; display: block; margin-bottom: 8px; }
+    .game-option-name { font-size: 14px; font-weight: 700; }
+    .game-option-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+    .waiting-msg { color: var(--text-muted); font-size: 14px; margin-bottom: 32px; }
+    .waiting-msg .dots::after { content: ''; animation: dots 1.5s infinite; }
+    @keyframes dots {
+      0% { content: ''; }
+      25% { content: '.'; }
+      50% { content: '..'; }
+      75% { content: '...'; }
+    }
+
+    /* Game Screen */
+    .game-screen-inner {
+      width: 100%;
+      min-height: calc(100vh - var(--nav-height));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg-primary);
+    }
+
+    .game-hud-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 12px 24px;
+      width: 100%;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .hud-name { font-size: 14px; font-weight: 600; color: var(--text-secondary); }
+    .hud-name.self { color: var(--accent-cyan); }
+    .hud-score { font-size: 28px; font-weight: 900; min-width: 32px; text-align: center; }
+    .hud-dash { color: var(--text-muted); font-size: 20px; }
+
+    .canvas-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 12px;
+    }
+
+    #arenaCanvas {
+      display: block;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-primary);
+      touch-action: none;
+    }
+
+    .countdown-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(9, 9, 11, 0.8);
+      z-index: 100;
+    }
+    .countdown-num {
+      font-size: clamp(80px, 20vw, 140px);
+      font-weight: 900;
+      color: var(--accent-cyan);
+      animation: countPop 0.4s ease-out;
+    }
+    @keyframes countPop {
+      0% { transform: scale(1.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .ping-display {
+      position: fixed;
+      bottom: 8px;
+      right: 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+      z-index: 50;
+    }
+
+    /* PostGame */
+    .postgame-title { font-size: 28px; font-weight: 900; margin-bottom: 8px; }
+    .postgame-subtitle { color: var(--text-secondary); font-size: 16px; margin-bottom: 32px; }
+    .postgame-scores {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .postgame-score {
+      font-size: 48px;
+      font-weight: 900;
+    }
+    .postgame-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Error / Toast */
+    .arena-toast {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: var(--bg-elevated);
+      border: 1px solid var(--accent-red);
+      border-radius: 10px;
+      padding: 12px 24px;
+      color: var(--text-primary);
+      font-size: 14px;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+    }
+    .arena-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 600px) {
+      .room-players { flex-direction: column; gap: 12px; }
+      .arena-actions { flex-direction: column; gap: 16px; }
+      .game-options { flex-direction: column; }
+      .game-option { min-width: auto; width: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-container" aria-label="Main navigation">
+      <a href="/" class="nav-logo">RyozoGames</a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/impressum/">Legal Notice</a></li>
+        <li><a href="/datenschutz/">Privacy</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- LOBBY -->
+    <div id="lobbyScreen" class="arena-screen">
+      <div class="arena-hero">
+        <h1>Arena</h1>
+        <p>Play mini-games with a friend in real-time.</p>
+      </div>
+      <div class="arena-actions">
+        <button class="arena-btn" id="createRoomBtn">Create Room</button>
+        <span class="arena-divider">or</span>
+        <div class="join-form">
+          <input type="text" id="roomCodeInput" maxlength="4" placeholder="CODE" autocomplete="off" spellcheck="false">
+          <button class="arena-btn" id="joinRoomBtn">Join</button>
+        </div>
+      </div>
+      <div class="connection-status" id="connectionStatus">
+        <span class="status-dot connecting" id="statusDot"></span>
+        <span id="statusText">Connecting...</span>
+      </div>
+    </div>
+
+    <!-- ROOM -->
+    <div id="roomScreen" class="arena-screen" style="display:none">
+      <div class="room-info">
+        <span class="room-label">Room Code</span>
+        <span class="room-code" id="roomCodeDisplay">----</span>
+        <br>
+        <button class="copy-btn" id="copyCodeBtn">Copy Code</button>
+      </div>
+
+      <div class="room-players">
+        <div class="player-slot" id="p1Slot">
+          <div class="player-name" id="p1Name">---</div>
+          <div class="player-label">Host</div>
+        </div>
+        <span class="vs-text">VS</span>
+        <div class="player-slot waiting" id="p2Slot">
+          <div class="player-name" id="p2Name">Waiting...</div>
+          <div class="player-label">Guest</div>
+        </div>
+      </div>
+
+      <div id="waitingArea">
+        <p class="waiting-msg">Waiting for opponent<span class="dots"></span></p>
+      </div>
+
+      <div id="gameSelectArea" style="display:none">
+        <div class="game-select">
+          <h3>Pick a Game</h3>
+          <div class="game-options">
+            <button class="game-option" data-game="pong">
+              <span class="game-option-icon">&#x1F3D3;</span>
+              <span class="game-option-name">Pong</span>
+              <span class="game-option-desc">Classic 2-player Pong</span>
+            </button>
+            <button class="game-option" data-game="airhockey">
+              <span class="game-option-icon">&#x1F3D2;</span>
+              <span class="game-option-name">Air Hockey</span>
+              <span class="game-option-desc">Top-down Air Hockey</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="guestWaitArea" style="display:none">
+        <p class="waiting-msg">Host is picking a game<span class="dots"></span></p>
+      </div>
+
+      <button class="arena-btn secondary" id="leaveRoomBtn" style="margin-top: 24px;">Leave Room</button>
+    </div>
+
+    <!-- GAME -->
+    <div id="gameScreen" class="arena-screen" style="display:none; padding: 0;">
+      <div class="game-screen-inner">
+        <div class="game-hud-bar">
+          <span class="hud-name self" id="hudP1Name">You</span>
+          <span class="hud-score" id="hudP1Score">0</span>
+          <span class="hud-dash">:</span>
+          <span class="hud-score" id="hudP2Score">0</span>
+          <span class="hud-name" id="hudP2Name">Opponent</span>
+        </div>
+        <div class="canvas-wrapper">
+          <canvas id="arenaCanvas"></canvas>
+        </div>
+      </div>
+      <div class="ping-display" id="pingDisplay"></div>
+    </div>
+
+    <!-- COUNTDOWN OVERLAY -->
+    <div id="countdownOverlay" class="countdown-overlay" style="display:none">
+      <span class="countdown-num" id="countdownNum">3</span>
+    </div>
+
+    <!-- POST GAME -->
+    <div id="postGameScreen" class="arena-screen" style="display:none">
+      <div class="postgame-title" id="winnerText">Player Wins!</div>
+      <div class="postgame-subtitle" id="winnerSub"></div>
+      <div class="postgame-scores">
+        <span class="postgame-score" id="finalP1Score" style="color: var(--accent-cyan);">0</span>
+        <span class="vs-text">:</span>
+        <span class="postgame-score" id="finalP2Score" style="color: var(--accent-purple);">0</span>
+      </div>
+      <div class="postgame-actions">
+        <button class="arena-btn" id="playAgainBtn">Play Again</button>
+        <button class="arena-btn secondary" id="newGameBtn">Different Game</button>
+        <button class="arena-btn secondary" id="postLeaveBtn">Leave Room</button>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="arena-toast"></div>
+  </main>
+
+  <footer class="site-footer">
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="/">Home</a>
+      <a href="/ryozodash/">RyozoDash</a>
+      <a href="/snake3d/">Snake 3D</a>
+      <a href="/ryozoclicker/">RyozoClicker</a>
+      <a href="/arena/">Arena</a>
+      <a href="/about/">About</a>
+      <a href="/impressum/">Legal Notice</a>
+      <a href="/datenschutz/">Privacy</a>
+    </nav>
+    <p class="footer-copy">&copy; 2026 RyozoGames. All rights reserved.</p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+  <script src="arena.js"></script>
+</body>
+</html>
