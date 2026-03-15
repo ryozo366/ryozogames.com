@@ -55,7 +55,7 @@
     /* ===== RYOZOCLICKER STYLES ===== */
     .clicker-game {
       display: flex;
-      min-height: calc(100vh - var(--nav-height));
+      height: calc(100vh - var(--nav-height));
       background: linear-gradient(180deg, #0d0020 0%, #0a0a0a 100%);
       position: relative;
       overflow: hidden;
@@ -80,7 +80,8 @@
       justify-content: center;
       padding: 20px;
       position: relative;
-      min-height: 400px;
+      min-height: 0;
+      overflow-y: auto;
     }
 
     .clicker-stats {
@@ -266,6 +267,7 @@
 
     .clicker-right {
       width: 380px;
+      height: 100%;
       background: rgba(10, 0, 20, 0.8);
       border-left: 1px solid var(--border-glow);
       display: flex;
@@ -384,11 +386,11 @@
     }
 
     @media (max-width: 768px) {
-      .clicker-game { flex-direction: column; min-height: auto; }
-      .clicker-left { min-height: 340px; padding: 16px; }
+      .clicker-game { flex-direction: column; height: auto; min-height: calc(100vh - var(--nav-height)); }
+      .clicker-left { min-height: 340px; padding: 16px; overflow-y: visible; }
       #clickArea { width: 160px; height: 160px; margin: 8px 0 16px; }
       #coinBtn { width: 160px; height: 160px; font-size: 52px; }
-      .clicker-right { width: 100%; border-left: none; border-top: 1px solid var(--border-glow); max-height: 50vh; }
+      .clicker-right { width: 100%; height: auto; border-left: none; border-top: 1px solid var(--border-glow); max-height: 50vh; }
       .shop-panel { max-height: 40vh; }
     }
 
